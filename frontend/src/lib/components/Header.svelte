@@ -1,0 +1,138 @@
+<script>
+  import { onMount } from 'svelte';
+  import { page } from '$app/stores';
+  import { cartUtils } from '$lib/utils/api.js';
+  import SearchAutocomplete from './SearchAutocomplete.svelte';
+  
+  // Реактивное состояние с новой реактивностью Svelte 5
+  let cartItemsCount = $state(0);
+  let isMenuOpen = $state(false);
+  
+  // Загрузка количества товаров в корзине
+  function loadCartCount() {
+    cartItemsCount = cartUtils.getTotalItems();
+  }
+  
+  // Обновление счетчика корзины при изменении
+  function updateCartCount() {
+    loadCartCount();
+  }
+  
+  function handleSearch(query) {
+    if (query.trim()) {
+      // Переход на страницу поиска с параметрами
+      window.location.href = `/catalog?search=${encodeURIComponent(query)}`;
+    }
+  }
+  
+  function handleProductSelect(product) {
+    // Переход на страницу товара
+    window.location.href = `/product/${product.id}`;
+  }
+  
+  function toggleMenu() {
+    isMenuOpen = !isMenuOpen;
+  }
+  
+  // Инициализация
+  onMount(() => {
+    loadCartCount();
+    
+    // Слушаем изменения в корзине
+    window.addEventListener('cartUpdated', updateCartCount);
+    
+    return () => {
+      window.removeEventListener('cartUpdated', updateCartCount);
+    };
+  });
+</script>
+
+<header class="bg-white shadow-sm border-b border-neutral-200 sticky top-0 z-50">
+  <div class="container-custom">
+    <div class="flex items-center justify-between h-16">
+      <!-- Логотип -->
+      <div class="flex items-center">
+        <a href="/" class="flex items-center space-x-2">
+          <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
+            <span class="text-white font-bold text-lg">G</span>
+          </div>
+          <span class="text-xl font-bold text-neutral-900">GoodDrive</span>
+        </a>
+      </div>
+      
+      <!-- Поиск (скрыт на мобильных) -->
+      <div class="hidden md:flex flex-1 max-w-lg mx-8">
+        <SearchAutocomplete
+          placeholder="Поиск автозапчастей..."
+          onSelect={handleProductSelect}
+          onSearch={handleSearch}
+        />
+      </div>
+      
+      <!-- Навигация и корзина -->
+      <div class="flex items-center space-x-4">
+        <!-- Навигационные ссылки (скрыты на мобильных) -->
+        <nav class="hidden md:flex items-center space-x-6">
+          <a href="/catalog" class="text-neutral-700 hover:text-primary-500 transition-colors">
+            Каталог
+          </a>
+          <a href="/about" class="text-neutral-700 hover:text-primary-500 transition-colors">
+            О нас
+          </a>
+          <a href="/contact" class="text-neutral-700 hover:text-primary-500 transition-colors">
+            Контакты
+          </a>
+        </nav>
+        
+        <!-- Корзина -->
+        <a href="/cart" class="relative p-2 text-neutral-700 hover:text-primary-500 transition-colors">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
+          </svg>
+          {#if cartItemsCount > 0}
+            <span class="absolute -top-1 -right-1 bg-primary-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              {cartItemsCount}
+            </span>
+          {/if}
+        </a>
+        
+        <!-- Мобильное меню -->
+        <button 
+          on:click={toggleMenu}
+          class="md:hidden p-2 text-neutral-700 hover:text-primary-500 transition-colors"
+        >
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Мобильное меню -->
+    {#if isMenuOpen}
+      <div class="md:hidden border-t border-neutral-200 py-4 animate-slide-up">
+        <div class="space-y-4">
+          <!-- Мобильный поиск -->
+          <SearchAutocomplete
+            placeholder="Поиск автозапчастей..."
+            onSelect={handleProductSelect}
+            onSearch={handleSearch}
+          />
+          
+          <!-- Мобильная навигация -->
+          <nav class="space-y-2">
+            <a href="/catalog" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors">
+              Каталог
+            </a>
+            <a href="/about" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors">
+              О нас
+            </a>
+            <a href="/contact" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors">
+              Контакты
+            </a>
+          </nav>
+        </div>
+      </div>
+    {/if}
+  </div>
+</header>

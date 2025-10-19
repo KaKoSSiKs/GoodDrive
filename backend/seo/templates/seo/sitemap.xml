@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Статические страницы -->
+    {% for page in static_pages %}
+    <url>
+        <loc>{{ base_url }}{{ page.url }}</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        <changefreq>{{ page.changefreq }}</changefreq>
+        <priority>{{ page.priority }}</priority>
+    </url>
+    {% endfor %}
+    
+    <!-- Страницы автозапчастей -->
+    {% for page in part_pages %}
+    <url>
+        <loc>{{ base_url }}{{ page.url }}</loc>
+        {% if page.lastmod %}
+        <lastmod>{{ page.lastmod }}</lastmod>
+        {% else %}
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        {% endif %}
+        <changefreq>{{ page.changefreq }}</changefreq>
+        <priority>{{ page.priority }}</priority>
+    </url>
+    {% endfor %}
+    
+    <!-- Страницы брендов -->
+    {% for page in brand_pages %}
+    <url>
+        <loc>{{ base_url }}{{ page.url }}</loc>
+        <lastmod>{% now "Y-m-d" %}</lastmod>
+        <changefreq>{{ page.changefreq }}</changefreq>
+        <priority>{{ page.priority }}</priority>
+    </url>
+    {% endfor %}
+</urlset>
+

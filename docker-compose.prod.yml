@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: gooddrive
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - gooddrive-network
+
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    command: gunicorn gooddrive_backend.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - media_files:/app/media
+    environment:
+      - DEBUG=False
+      - DB_HOST=db
+      - DB_NAME=gooddrive
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - SECRET_KEY=django-insecure-prod-key-change-me
+    depends_on:
+      - db
+    networks:
+      - gooddrive-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    volumes:
+      - static_files:/app/build
+    networks:
+      - gooddrive-network
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.prod.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+      - static_files:/var/www/static
+      - media_files:/var/www/media
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - gooddrive-network
+
+volumes:
+  postgres_data:
+  media_files:
+  static_files:
+
+networks:
+  gooddrive-network:
+    driver: bridge
+
