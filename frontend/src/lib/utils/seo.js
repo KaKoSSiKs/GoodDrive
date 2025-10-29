@@ -211,6 +211,13 @@ export function formatPageTitle(title, siteName = 'GoodDrive') {
 }
 
 /**
+ * Генерирует заголовок страницы (алиас для formatPageTitle)
+ */
+export function generatePageTitle(title, siteName = 'GoodDrive') {
+  return formatPageTitle(title, siteName);
+}
+
+/**
  * Генерирует описание страницы
  */
 export function generatePageDescription(type, data = {}) {
@@ -314,4 +321,5 @@ export function generateSitemapXml(pages, baseUrl) {
     baseUrl
   };
 }
+
 

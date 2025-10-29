@@ -1,18 +1,20 @@
 <script>
-  // Пропсы компонента
-  export let currentPage = 1;
-  export let totalPages = 1;
-  export let onPageChange = () => {};
+  // Пропсы компонента (Svelte 5 синтаксис)
+  let {
+    currentPage = 1,
+    totalPages = 1,
+    onPageChange = () => {}
+  } = $props();
   
   // Производные значения
-  const hasPages = $derived(totalPages > 1);
-  const showFirstPage = $derived(currentPage > 3);
-  const showLastPage = $derived(currentPage < totalPages - 2);
-  const showPrevEllipsis = $derived(currentPage > 4);
-  const showNextEllipsis = $derived(currentPage < totalPages - 3);
+  let hasPages = $derived(totalPages > 1);
+  let showFirstPage = $derived(currentPage > 3);
+  let showLastPage = $derived(currentPage < totalPages - 2);
+  let showPrevEllipsis = $derived(currentPage > 4);
+  let showNextEllipsis = $derived(currentPage < totalPages - 3);
   
   // Вычисляем диапазон страниц для отображения
-  const pageRange = $derived(() => {
+  let pageRange = $derived(() => {
     const delta = 2; // Количество страниц с каждой стороны от текущей
     const range = [];
     const rangeWithDots = [];
@@ -60,7 +62,7 @@
   <nav class="flex items-center justify-center space-x-1" aria-label="Пагинация">
     <!-- Кнопка "Назад" -->
     <button
-      on:click={handlePrevPage}
+      onclick={handlePrevPage}
       disabled={currentPage === 1}
       class="btn-outline disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1"
       aria-label="Предыдущая страница"
@@ -78,7 +80,7 @@
           <span class="px-3 py-2 text-neutral-500">...</span>
         {:else}
           <button
-            on:click={() => handlePageChange(page)}
+            onclick={() => handlePageChange(page)}
             class="btn {page === currentPage ? 'btn-primary' : 'btn-outline'}"
             aria-label="Страница {page}"
             aria-current={page === currentPage ? 'page' : undefined}
@@ -91,7 +93,7 @@
     
     <!-- Кнопка "Вперед" -->
     <button
-      on:click={handleNextPage}
+      onclick={handleNextPage}
       disabled={currentPage === totalPages}
       class="btn-outline disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1"
       aria-label="Следующая страница"
@@ -108,4 +110,5 @@
     Страница {currentPage} из {totalPages}
   </div>
 {/if}
+
 

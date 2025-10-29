@@ -41,3 +41,10 @@ class SeoSettingsSerializer(serializers.ModelSerializer):
             return obj.default_og_image.url
         return None
 
+
+
+
+
+
+
+

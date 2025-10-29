@@ -1,9 +1,8 @@
 <script>
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import { partsApi, cartUtils, seoApi, formatPrice } from '$lib/utils/api.js';
+  import { partsApi, cartUtils, seoApi, formatUtils } from '$lib/utils/api.js';
   import { goto } from '$app/navigation';
-  import { $state, $derived, $effect } from 'svelte';
   import SeoHead from '$lib/components/SeoHead.svelte';
   import { generateProductJsonLd, generateBreadcrumbJsonLd } from '$lib/utils/seo.js';
   
@@ -193,7 +192,7 @@
           <div class="flex space-x-2 overflow-x-auto pb-2">
             {#each part.images as image, index}
               <button
-                on:click={() => selectImage(index)}
+                onclick={() => selectImage(index)}
                 class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 {index === selectedImageIndex ? 'border-primary-500' : 'border-neutral-200'} focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <img
@@ -235,7 +234,7 @@
         </div>
 
         <div class="mb-6">
-          <div class="text-3xl font-bold text-primary-500 mb-2">{formatPrice(part.price_opt)}</div>
+          <div class="text-3xl font-bold text-primary-500 mb-2">{formatUtils.formatPrice(part.price_opt)}</div>
           <div class="flex items-center space-x-4">
             <span class="text-sm text-neutral-600">Наличие:</span>
             <span class="font-semibold {isInStock ? 'text-green-600' : 'text-red-600'}">
@@ -250,7 +249,7 @@
               <span class="text-sm text-neutral-600">Количество:</span>
               <div class="flex items-center border border-neutral-300 rounded-lg">
                 <button
-                  on:click={() => changeQuantity(-1)}
+                  onclick={() => changeQuantity(-1)}
                   disabled={quantity <= 1}
                   class="px-3 py-2 hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -258,7 +257,7 @@
                 </button>
                 <span class="px-4 py-2 border-x border-neutral-300">{quantity}</span>
                 <button
-                  on:click={() => changeQuantity(1)}
+                  onclick={() => changeQuantity(1)}
                   disabled={quantity >= maxQuantity}
                   class="px-3 py-2 hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -269,7 +268,7 @@
           </div>
 
           <button
-            on:click={handleAddToCart}
+            onclick={handleAddToCart}
             class="btn-primary w-full mb-4"
           >
             Добавить в корзину
@@ -325,11 +324,11 @@
                 <h3 class="font-semibold text-neutral-900 mb-2 text-sm line-clamp-2">{similarPart.title}</h3>
                 <p class="text-neutral-600 text-xs mb-2">{similarPart.brand_name}</p>
                 <div class="flex items-center justify-between mb-3">
-                  <span class="font-bold text-primary-500">{formatPrice(similarPart.price_opt)}</span>
+                  <span class="font-bold text-primary-500">{formatUtils.formatPrice(similarPart.price_opt)}</span>
                   <span class="text-xs text-neutral-500">{similarPart.available} шт.</span>
                 </div>
                 <button
-                  on:click|preventDefault={() => goto(`/product/${similarPart.id}`)}
+                  onclick={(e) => { e.preventDefault(); goto(`/product/${similarPart.id}`); }}
                   class="btn-outline w-full text-sm"
                 >
                   Подробнее

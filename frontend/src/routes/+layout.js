@@ -1,11 +1,9 @@
-import '../app.css';
-import Layout from '$lib/components/Layout.svelte';
+// Конфигурация layout для SSR
+export const ssr = true;
+export const prerender = false;
 
-/** @type {import('./$types').LayoutLoad} */
-export function load() {
-	return {
-		title: 'GoodDrive'
-	};
-}
 
-export default Layout;
+
+
+
+

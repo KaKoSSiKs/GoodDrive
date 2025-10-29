@@ -600,3 +600,7 @@ test('catalog page loads and filters work', async ({ page }) => {
 </div>
 ```
 
+
+
+
+

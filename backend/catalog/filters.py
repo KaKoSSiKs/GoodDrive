@@ -66,3 +66,10 @@ class PartFilter(django_filters.FilterSet):
             Q(brand__name__icontains=value)
         )
 
+
+
+
+
+
+
+

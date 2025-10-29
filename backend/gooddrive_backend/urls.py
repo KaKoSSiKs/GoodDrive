@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('files.urls')),
+    # path('api/', include('files.urls')),  # Временно отключено - модель не определена
     path('api/', include('catalog.urls')),
     path('api/', include('seo.urls')),
     path('api/', include('orders.urls')),

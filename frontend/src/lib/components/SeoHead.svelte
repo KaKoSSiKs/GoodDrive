@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { 
     generateMetaTags, 
@@ -9,31 +8,33 @@
     generateCanonicalUrl 
   } from '$lib/utils/seo.js';
   
-  // Пропсы компонента
-  export let title = '';
-  export let description = '';
-  export let keywords = '';
-  export let image = '';
-  export let type = 'website';
-  export let product = null;
-  export let breadcrumbs = [];
-  export let jsonLd = null;
+  // Пропсы компонента (Svelte 5 синтаксис)
+  let {
+    title = '',
+    description = '',
+    keywords = '',
+    image = '',
+    type = 'website',
+    product = null,
+    breadcrumbs = [],
+    jsonLd = null
+  } = $props();
   
   // Реактивное состояние
   let metaTags = $state([]);
   let canonicalUrl = $state('');
   
   // Производные значения
-  const pageTitle = $derived(generatePageTitle(title));
-  const pageDescription = $derived(description || generatePageDescription(type, { product }));
-  const pageKeywords = $derived(keywords || generateKeywords(type, { product }));
+  let pageTitle = $derived(generatePageTitle(title));
+  let pageDescription = $derived(description || generatePageDescription(type, { product }));
+  let pageKeywords = $derived(keywords || generateKeywords(type, { product }));
   
-  // Обновление метатегов
-  function updateMetaTags() {
-    const baseUrl = 'https://gooddrive.com'; // В продакшене должен быть из переменных окружения
-    const currentUrl = `${baseUrl}${page.url.pathname}`;
+  // Обновление метатегов при изменении пропсов
+  $effect(() => {
+    const baseUrl = 'https://gooddrive.com';
+    const currentUrl = `${baseUrl}${$page.url.pathname}`;
     
-    canonicalUrl = generateCanonicalUrl(baseUrl, page.url.pathname);
+    canonicalUrl = generateCanonicalUrl(baseUrl, $page.url.pathname);
     
     metaTags = generateMetaTags({
       title: pageTitle,
@@ -44,16 +45,6 @@
       type: type,
       product: product
     });
-  }
-  
-  // Инициализация
-  onMount(() => {
-    updateMetaTags();
-  });
-  
-  // Обновление при изменении пропсов
-  $effect(() => {
-    updateMetaTags();
   });
 </script>
 
@@ -105,4 +96,5 @@
     })}</script>`}
   {/if}
 </svelte:head>
+
 

@@ -69,3 +69,10 @@ class OrderFilter(django_filters.FilterSet):
         else:
             return queryset.filter(notes__isnull=True) | queryset.filter(notes='')
 
+
+
+
+
+
+
+

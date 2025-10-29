@@ -2,11 +2,13 @@
   import { onMount } from 'svelte';
   import { partsApi } from '$lib/utils/api.js';
   
-  // Пропсы компонента
-  export let placeholder = 'Поиск автозапчастей...';
-  export let onSelect = () => {};
-  export let onSearch = () => {};
-  export let debounceMs = 300;
+  // Пропсы компонента (Svelte 5 синтаксис)
+  let {
+    placeholder = 'Поиск автозапчастей...',
+    onSelect = () => {},
+    onSearch = () => {},
+    debounceMs = 300
+  } = $props();
   
   // Реактивное состояние
   let searchQuery = $state('');
@@ -17,8 +19,8 @@
   let timeoutId = $state(null);
   
   // Производные значения
-  const hasSuggestions = $derived(suggestions.length > 0 && isOpen);
-  const hasQuery = $derived(searchQuery.trim().length > 0);
+  let hasSuggestions = $derived(suggestions.length > 0 && isOpen);
+  let hasQuery = $derived(searchQuery.trim().length > 0);
   
   // Загрузка предложений
   async function loadSuggestions(query) {
@@ -142,10 +144,10 @@
       type="text"
       placeholder={placeholder}
       bind:value={searchQuery}
-      on:input={handleInput}
-      on:keydown={handleKeyDown}
-      on:focus={handleFocus}
-      on:blur={handleBlur}
+      oninput={handleInput}
+      onkeydown={handleKeyDown}
+      onfocus={handleFocus}
+      onblur={handleBlur}
       class="input pl-10 pr-10 w-full"
     />
     
@@ -159,8 +161,9 @@
     <!-- Кнопка очистки -->
     {#if hasQuery}
       <button
-        on:click={clearSearch}
+        onclick={clearSearch}
         class="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-400 hover:text-neutral-600"
+        aria-label="Очистить поиск"
       >
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -169,8 +172,9 @@
     {:else}
       <!-- Кнопка поиска -->
       <button
-        on:click={performSearch}
+        onclick={performSearch}
         class="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-400 hover:text-primary-500"
+        aria-label="Поиск"
       >
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -184,7 +188,7 @@
     <div class="absolute z-50 w-full mt-1 bg-white border border-neutral-200 rounded-lg shadow-lg max-h-80 overflow-y-auto">
       {#each suggestions as suggestion, index}
         <button
-          on:click={() => selectSuggestion(suggestion)}
+          onclick={() => selectSuggestion(suggestion)}
           class="w-full px-4 py-3 text-left hover:bg-neutral-50 border-b border-neutral-100 last:border-b-0 {selectedIndex === index ? 'bg-primary-50' : ''}"
         >
           <div class="flex items-center space-x-3">
@@ -226,7 +230,7 @@
       <!-- Кнопка "Показать все результаты" -->
       <div class="px-4 py-2 border-t border-neutral-200">
         <button
-          on:click={performSearch}
+          onclick={performSearch}
           class="w-full text-center text-sm text-primary-500 hover:text-primary-600 font-medium"
         >
           Показать все результаты для "{searchQuery}"
@@ -246,21 +250,5 @@
   {/if}
 </div>
 
-<style>
-  /* Стили для анимации появления */
-  .animate-slide-down {
-    animation: slideDown 0.2s ease-out;
-  }
-  
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-</style>
+
 

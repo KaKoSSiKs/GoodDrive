@@ -57,3 +57,10 @@ class SeoSettingsAdmin(admin.ModelAdmin):
         # Запрещаем удаление настроек
         return False
 
+
+
+
+
+
+
+

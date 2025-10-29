@@ -84,7 +84,7 @@
             <div class="flex items-center justify-between mb-6">
               <h2 class="text-xl font-semibold text-neutral-900">Товары в корзине</h2>
               <button
-                on:click={clearCart}
+                onclick={clearCart}
                 class="text-sm text-red-600 hover:text-red-800 font-medium"
               >
                 Очистить корзину
@@ -121,7 +121,7 @@
                   <!-- Управление количеством -->
                   <div class="flex items-center space-x-2">
                     <button
-                      on:click={() => updateQuantity(item.id, item.quantity - 1)}
+                      onclick={() => updateQuantity(item.id, item.quantity - 1)}
                       class="w-8 h-8 rounded-full border border-neutral-300 flex items-center justify-center hover:bg-neutral-50"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,7 +132,7 @@
                     <span class="w-12 text-center font-medium">{item.quantity}</span>
                     
                     <button
-                      on:click={() => updateQuantity(item.id, item.quantity + 1)}
+                      onclick={() => updateQuantity(item.id, item.quantity + 1)}
                       class="w-8 h-8 rounded-full border border-neutral-300 flex items-center justify-center hover:bg-neutral-50"
                     >
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,7 +150,7 @@
                   
                   <!-- Кнопка удаления -->
                   <button
-                    on:click={() => removeItem(item.id)}
+                    onclick={() => removeItem(item.id)}
                     class="text-neutral-400 hover:text-red-600 p-1"
                     title="Удалить товар"
                   >
@@ -189,7 +189,7 @@
             </div>
             
             <button
-              on:click={proceedToCheckout}
+              onclick={proceedToCheckout}
               disabled={isLoading}
               class="btn-primary w-full mb-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >

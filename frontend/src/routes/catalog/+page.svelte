@@ -6,7 +6,7 @@
   import Pagination from '$lib/components/Pagination.svelte';
   import SeoHead from '$lib/components/SeoHead.svelte';
   import { partsApi, brandsApi, warehousesApi, cartUtils } from '$lib/utils/api.js';
-  import { formatNumber } from '$lib/utils/api.js';
+  import { formatUtils } from '$lib/utils/api.js';
   import { generateCollectionJsonLd, generateBreadcrumbJsonLd } from '$lib/utils/seo.js';
   
   // Реактивное состояние
@@ -19,8 +19,11 @@
   let totalPages = $state(1);
   let totalCount = $state(0);
   
-  // Фильтры из URL параметров
-  let filters = $state({
+  // Получаем текущий URL из store (только на верхнем уровне)
+  const currentUrl = $derived($page.url);
+  
+  // Получаем начальные значения фильтров из URL (на верхнем уровне)
+  const initialFilters = {
     search: $page.url.searchParams.get('search') || '',
     brand: $page.url.searchParams.get('brand') || '',
     warehouse: $page.url.searchParams.get('warehouse') || '',
@@ -28,7 +31,9 @@
     price_max: $page.url.searchParams.get('price_max') || '',
     in_stock: $page.url.searchParams.get('in_stock') === 'true',
     ordering: $page.url.searchParams.get('ordering') || '-created_at'
-  });
+  };
+  
+  let filters = $state(initialFilters);
   
   // Производные значения
   const hasParts = $derived(parts.length > 0);
@@ -52,7 +57,7 @@
   
   // JSON-LD для коллекции товаров
   const collectionJsonLd = $derived(generateCollectionJsonLd(parts, {
-    url: $page.url.href,
+    url: currentUrl.href,
     totalCount: totalCount
   }));
   
@@ -127,7 +132,7 @@
     currentPage = 1;
     
     // Обновляем URL без перезагрузки страницы
-    const url = new URL($page.url);
+    const url = new URL(currentUrl);
     Object.keys(newFilters).forEach(key => {
       if (newFilters[key] && newFilters[key] !== false) {
         url.searchParams.set(key, newFilters[key]);
@@ -155,7 +160,7 @@
     currentPage = 1;
     
     // Очищаем URL параметры
-    const url = new URL($page.url);
+    const url = new URL(currentUrl);
     url.search = '';
     window.history.replaceState({}, '', url);
     
@@ -166,7 +171,7 @@
     currentPage = page;
     
     // Обновляем URL с номером страницы
-    const url = new URL($page.url);
+    const url = new URL(currentUrl);
     if (page > 1) {
       url.searchParams.set('page', page);
     } else {
@@ -219,7 +224,7 @@
       {#if isLoading}
         Загрузка...
       {:else}
-        Найдено товаров: {formatNumber(totalCount)}
+        Найдено товаров: {formatUtils.formatNumber(totalCount)}
       {/if}
     </p>
   </div>
@@ -256,7 +261,7 @@
           {#each parts as part}
             <PartCard
               {part}
-              on:addToCart={handleAddToCart}
+              onaddToCart={handleAddToCart}
             />
           {/each}
         </div>
@@ -275,7 +280,7 @@
           </svg>
           <h3 class="text-lg font-semibold text-neutral-900 mb-2">Товары не найдены</h3>
           <p class="text-neutral-600 mb-4">Попробуйте изменить параметры поиска</p>
-          <button on:click={handleClearFilters} class="btn-primary">
+          <button onclick={handleClearFilters} class="btn-primary">
             Сбросить фильтры
           </button>
         </div>

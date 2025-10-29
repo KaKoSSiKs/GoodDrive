@@ -176,3 +176,10 @@ class OrderListSerializer(serializers.ModelSerializer):
         """Количество позиций в заказе"""
         return obj.items.count()
 
+
+
+
+
+
+
+

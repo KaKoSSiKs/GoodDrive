@@ -1,25 +1,27 @@
 <script>
-  // Пропсы компонента
-  export let part;
-  export let showWarehouse = false;
-  export let compact = false;
+  // Пропсы компонента (Svelte 5 синтаксис)
+  let {
+    part,
+    showWarehouse = false,
+    compact = false
+  } = $props();
   
   // Реактивное состояние
   let isImageLoading = $state(true);
   let imageError = $state(false);
   
   // Производные значения
-  const hasImage = $derived(part.main_image?.url);
-  const isInStock = $derived(part.available > 0);
-  const stockStatus = $derived(
+  let hasImage = $derived(part.main_image?.url);
+  let isInStock = $derived(part.available > 0);
+  let stockStatus = $derived(
     part.available === 0 ? 'Нет в наличии' :
     part.available <= 5 ? 'Мало на складе' :
     'В наличии'
   );
-  const stockStatusClass = $derived(
-    part.available === 0 ? 'text-red-600' :
-    part.available <= 5 ? 'text-yellow-600' :
-    'text-green-600'
+  let stockStatusClass = $derived(
+    part.available === 0 ? 'bg-red-100 text-red-800' :
+    part.available <= 5 ? 'badge-accent' :
+    'badge-success'
   );
   
   // Обработчики
@@ -47,102 +49,102 @@
   }
 </script>
 
-<div class="card p-{compact ? '4' : '6'} hover:shadow-md transition-all duration-200 group">
+<a href="/product/{part.id}" class="card-hover group block {compact ? 'p-4' : 'p-6'}">
   <!-- Изображение товара -->
-  <div class="aspect-square bg-neutral-100 rounded-lg mb-4 flex items-center justify-center overflow-hidden relative">
+  <div class="aspect-square bg-gradient-to-br from-secondary-50 to-secondary-100 rounded-xl mb-6 flex items-center justify-center overflow-hidden relative">
     {#if hasImage && !imageError}
       <img 
         src={part.main_image.url} 
         alt={part.main_image.alt || part.title}
-        class="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
-        on:load={handleImageLoad}
-        on:error={handleImageError}
+        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+        onload={handleImageLoad}
+        onerror={handleImageError}
       />
       {#if isImageLoading}
-        <div class="absolute inset-0 bg-neutral-200 animate-pulse"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-secondary-100 to-secondary-200 animate-pulse rounded-xl"></div>
       {/if}
     {:else}
-      <svg class="w-{compact ? '12' : '16'} h-{compact ? '12' : '16'} text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
+      <div class="text-center">
+        <svg class="text-secondary-400 mx-auto mb-2 {compact ? 'w-12 h-12' : 'w-16 h-16'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <p class="text-xs text-secondary-500">Изображение</p>
+      </div>
     {/if}
     
     <!-- Статус наличия -->
-    <div class="absolute top-2 right-2">
-      <span class="px-2 py-1 text-xs font-medium rounded-full {stockStatusClass} bg-white shadow-sm">
+    <div class="absolute top-3 right-3">
+      <span class="badge {stockStatusClass}">
         {stockStatus}
       </span>
     </div>
   </div>
   
   <!-- Информация о товаре -->
-  <div class="space-y-2">
-    <h3 class="font-semibold text-neutral-900 line-clamp-2 group-hover:text-primary-600 transition-colors">
-      {part.title}
-    </h3>
-    
-    <div class="flex items-center justify-between text-sm text-neutral-600">
-      <span class="font-medium">{part.brand_name}</span>
-      {#if showWarehouse}
-        <span class="text-xs">{part.warehouse_name}</span>
-      {/if}
+  <div class="space-y-4">
+    <div>
+      <h3 class="font-bold text-secondary-900 line-clamp-2 group-hover:text-primary-600 transition-colors text-lg leading-tight">
+        {part.title}
+      </h3>
+      
+      <div class="flex items-center justify-between mt-2">
+        <span class="text-sm font-medium text-primary-600 bg-primary-50 px-2 py-1 rounded-lg">
+          {part.brand_name}
+        </span>
+        {#if showWarehouse}
+          <span class="text-xs text-secondary-500 bg-secondary-100 px-2 py-1 rounded-lg">
+            {part.warehouse_name}
+          </span>
+        {/if}
+      </div>
     </div>
     
     <!-- Номера товара -->
     {#if part.original_number || part.manufacturer_number}
-      <div class="space-y-1">
+      <div class="space-y-2">
         {#if part.original_number}
-          <div class="text-xs text-neutral-500">
-            <span class="font-medium">Оригинал:</span> {part.original_number}
+          <div class="text-xs text-secondary-600 bg-secondary-50 px-3 py-2 rounded-lg">
+            <span class="font-medium text-secondary-700">Оригинал:</span> {part.original_number}
           </div>
         {/if}
         {#if part.manufacturer_number}
-          <div class="text-xs text-neutral-500">
-            <span class="font-medium">Производитель:</span> {part.manufacturer_number}
+          <div class="text-xs text-secondary-600 bg-secondary-50 px-3 py-2 rounded-lg">
+            <span class="font-medium text-secondary-700">Производитель:</span> {part.manufacturer_number}
           </div>
         {/if}
       </div>
     {/if}
     
-    <!-- Цена и количество -->
-    <div class="flex items-center justify-between">
-      <div class="text-lg font-bold text-primary-500">
-        {part.price_opt.toLocaleString()} ₽
+    <!-- Цена и кнопка -->
+    <div class="space-y-4">
+      <div class="text-center">
+        <div class="text-2xl font-bold text-gradient mb-1">
+          {part.price_opt ? `${part.price_opt.toLocaleString()} ₽` : 'Цена по запросу'}
+        </div>
+        {#if part.available > 0}
+          <div class="text-sm text-secondary-500">
+            Остаток: <span class="font-medium text-secondary-700">{part.available} шт.</span>
+          </div>
+        {/if}
       </div>
-      <div class="text-sm text-neutral-500">
-        {part.available} шт.
-      </div>
+      
+      <button
+        onclick={handleAddToCart}
+        disabled={!isInStock}
+        class="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+      >
+        {#if isInStock}
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
+          </svg>
+          В корзину
+        {:else}
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Нет в наличии
+        {/if}
+      </button>
     </div>
-    
-    <!-- Кнопка добавления в корзину -->
-    <button
-      on:click={handleAddToCart}
-      disabled={!isInStock}
-      class="w-full btn {isInStock ? 'btn-primary' : 'btn-secondary opacity-50 cursor-not-allowed'}"
-    >
-      {#if isInStock}
-        Добавить в корзину
-      {:else}
-        Нет в наличии
-      {/if}
-    </button>
-    
-    <!-- Ссылка на детальную страницу -->
-    <a 
-      href="/product/{part.id}" 
-      class="block w-full btn-outline text-center"
-    >
-      Подробнее
-    </a>
   </div>
-</div>
-
-<style>
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-</style>
-
+</a>

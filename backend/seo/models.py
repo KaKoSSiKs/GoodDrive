@@ -180,3 +180,10 @@ class SeoSettings(models.Model):
         )
         return settings
 
+
+
+
+
+
+
+

@@ -1,17 +1,22 @@
 <script>
   import FilterCheckbox from './FilterCheckbox.svelte';
-  import RangeSlider from './RangeSlider.svelte';
+  import { onMount } from 'svelte';
   
-  // Пропсы компонента
-  export let brands = [];
-  export let warehouses = [];
-  export let filters = {};
-  export let onFilterChange = () => {};
-  export let onClearFilters = () => {};
+  // Пропсы компонента (Svelte 5 синтаксис)
+  let {
+    brands = [],
+    warehouses = [],
+    filters = {},
+    onFilterChange = () => {},
+    onClearFilters = () => {}
+  } = $props();
   
   // Реактивное состояние
   let isExpanded = $state(false);
-  let priceRange = $state({ min: filters.price_min || 0, max: filters.price_max || 100000 });
+  let searchValue = $state(filters.search || '');
+  let priceMin = $state(filters.price_min || '');
+  let priceMax = $state(filters.price_max || '');
+  let searchTimeout = null;
   
   // Производные значения
   const hasActiveFilters = $derived(
@@ -19,62 +24,76 @@
     filters.price_min || filters.price_max || filters.in_stock
   );
   
+  // Debounce для поиска
+  function debounceSearch(value) {
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+    searchTimeout = setTimeout(() => {
+      handleInputChange('search', value);
+    }, 500); // 500ms задержка
+  }
+  
   // Обработчики
   function handleInputChange(field, value) {
     onFilterChange({ ...filters, [field]: value });
   }
   
-  function handleSearchSubmit(event) {
-    event.preventDefault();
-    onFilterChange({ ...filters, search: event.target.search.value });
+  function handleSearchInput(event) {
+    const value = event.target.value;
+    searchValue = value;
+    debounceSearch(value);
   }
   
-  function handlePriceRangeChange(range) {
-    priceRange = range;
-    onFilterChange({ 
-      ...filters, 
-      price_min: range.min > 0 ? range.min : '',
-      price_max: range.max < 100000 ? range.max : ''
-    });
+  function handlePriceChange(field, value) {
+    const numValue = value ? parseInt(value) : '';
+    if (field === 'price_min') {
+      priceMin = value;
+    } else {
+      priceMax = value;
+    }
+    handleInputChange(field, numValue);
+  }
+  
+  function handleSearchSubmit(event) {
+    event.preventDefault();
+    handleInputChange('search', searchValue);
   }
   
   function handleBrandToggle(brandId, checked) {
-    const currentBrands = filters.brand ? filters.brand.split(',') : [];
-    let newBrands;
+    const currentBrands = filters.brand ? filters.brand.split(',').filter(id => id !== '') : [];
     
     if (checked) {
-      newBrands = [...currentBrands, brandId.toString()];
+      if (!currentBrands.includes(brandId.toString())) {
+        currentBrands.push(brandId.toString());
+      }
     } else {
-      newBrands = currentBrands.filter(id => id !== brandId.toString());
+      const index = currentBrands.indexOf(brandId.toString());
+      if (index > -1) {
+        currentBrands.splice(index, 1);
+      }
     }
     
-    onFilterChange({ 
-      ...filters, 
-      brand: newBrands.length > 0 ? newBrands.join(',') : ''
-    });
+    handleInputChange('brand', currentBrands.join(','));
   }
   
   function handleWarehouseToggle(warehouseId, checked) {
-    const currentWarehouses = filters.warehouse ? filters.warehouse.split(',') : [];
-    let newWarehouses;
+    const currentWarehouses = filters.warehouse ? filters.warehouse.split(',').filter(id => id !== '') : [];
     
     if (checked) {
-      newWarehouses = [...currentWarehouses, warehouseId.toString()];
+      if (!currentWarehouses.includes(warehouseId.toString())) {
+        currentWarehouses.push(warehouseId.toString());
+      }
     } else {
-      newWarehouses = currentWarehouses.filter(id => id !== warehouseId.toString());
+      const index = currentWarehouses.indexOf(warehouseId.toString());
+      if (index > -1) {
+        currentWarehouses.splice(index, 1);
+      }
     }
     
-    onFilterChange({ 
-      ...filters, 
-      warehouse: newWarehouses.length > 0 ? newWarehouses.join(',') : ''
-    });
+    handleInputChange('warehouse', currentWarehouses.join(','));
   }
   
-  function toggleExpanded() {
-    isExpanded = !isExpanded;
-  }
-  
-  // Проверка выбранности бренда/склада
   function isBrandSelected(brandId) {
     return filters.brand ? filters.brand.split(',').includes(brandId.toString()) : false;
   }
@@ -82,24 +101,38 @@
   function isWarehouseSelected(warehouseId) {
     return filters.warehouse ? filters.warehouse.split(',').includes(warehouseId.toString()) : false;
   }
+  
+  function toggleExpanded() {
+    isExpanded = !isExpanded;
+  }
+  
+  // Очистка таймера при размонтировании
+  onMount(() => {
+    return () => {
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
+    };
+  });
 </script>
 
-<div class="card p-6 sticky top-24">
+<div class="bg-white rounded-2xl shadow-lg border border-secondary-100 p-6">
   <!-- Заголовок фильтров -->
   <div class="flex items-center justify-between mb-6">
-    <h2 class="text-lg font-semibold text-neutral-900">Фильтры</h2>
-    <div class="flex items-center space-x-2">
+    <h2 class="text-xl font-bold text-secondary-900">Фильтры</h2>
+    <div class="flex items-center space-x-3">
       {#if hasActiveFilters}
         <button 
-          on:click={onClearFilters}
-          class="text-sm text-primary-500 hover:text-primary-600 font-medium"
+          onclick={onClearFilters}
+          class="text-sm text-primary-600 hover:text-primary-700 font-medium transition-colors"
         >
           Сбросить
         </button>
       {/if}
       <button
-        on:click={toggleExpanded}
-        class="md:hidden p-1 text-neutral-500 hover:text-neutral-700"
+        onclick={toggleExpanded}
+        class="md:hidden p-2 text-secondary-500 hover:text-secondary-700 rounded-lg hover:bg-secondary-100 transition-colors"
+        aria-label="Переключить фильтры"
       >
         <svg class="w-5 h-5 transition-transform {isExpanded ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -112,27 +145,29 @@
   <div class="space-y-6 {isExpanded ? '' : 'hidden md:block'}">
     <!-- Поиск -->
     <div>
-      <label class="block text-sm font-medium text-neutral-700 mb-2">Поиск</label>
-      <form on:submit={handleSearchSubmit}>
+      <label for="search-input" class="block text-sm font-medium text-secondary-700 mb-3">Поиск</label>
+      <form onsubmit={handleSearchSubmit}>
         <div class="relative">
           <input
+            id="search-input"
             type="text"
             name="search"
             placeholder="Название, номер..."
-            value={filters.search || ''}
-            on:input={(e) => handleInputChange('search', e.target.value)}
-            class="input pl-10"
+            value={searchValue}
+            oninput={handleSearchInput}
+            class="input pl-10 pr-10"
           />
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg class="h-5 w-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
-          {#if filters.search}
+          {#if searchValue}
             <button
               type="button"
-              on:click={() => handleInputChange('search', '')}
-              class="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-400 hover:text-neutral-600"
+              onclick={() => { searchValue = ''; handleInputChange('search', ''); }}
+              class="absolute inset-y-0 right-0 pr-3 flex items-center text-secondary-400 hover:text-secondary-600 transition-colors"
+              aria-label="Очистить поиск"
             >
               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -145,19 +180,39 @@
     
     <!-- Цена -->
     <div>
-      <RangeSlider
-        min={0}
-        max={100000}
-        step={100}
-        value={priceRange}
-        onInput={handlePriceRangeChange}
-      />
+      <div class="block text-sm font-medium text-secondary-700 mb-3">Цена, ₽</div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="price-min" class="block text-xs text-secondary-500 mb-1">От</label>
+          <input
+            id="price-min"
+            type="number"
+            placeholder="0"
+            value={priceMin}
+            oninput={(e) => handlePriceChange('price_min', e.target.value)}
+            class="input text-sm"
+            min="0"
+          />
+        </div>
+        <div>
+          <label for="price-max" class="block text-xs text-secondary-500 mb-1">До</label>
+          <input
+            id="price-max"
+            type="number"
+            placeholder="100000"
+            value={priceMax}
+            oninput={(e) => handlePriceChange('price_max', e.target.value)}
+            class="input text-sm"
+            min="0"
+          />
+        </div>
+      </div>
     </div>
     
     <!-- Бренды -->
     <div>
-      <label class="block text-sm font-medium text-neutral-700 mb-3">Бренды</label>
-      <div class="space-y-2 max-h-48 overflow-y-auto">
+      <div class="block text-sm font-medium text-secondary-700 mb-3">Бренды</div>
+      <div class="space-y-3 max-h-48 overflow-y-auto">
         {#each brands.slice(0, 10) as brand}
           <FilterCheckbox
             label={brand.name}
@@ -168,7 +223,7 @@
         {/each}
         
         {#if brands.length > 10}
-          <div class="text-xs text-neutral-500 pt-2 border-t border-neutral-200">
+          <div class="text-xs text-secondary-500 pt-2 border-t border-secondary-200">
             Показано 10 из {brands.length} брендов
           </div>
         {/if}
@@ -177,20 +232,19 @@
     
     <!-- Склады -->
     <div>
-      <label class="block text-sm font-medium text-neutral-700 mb-3">Склады</label>
-      <div class="space-y-2">
+      <div class="block text-sm font-medium text-secondary-700 mb-3">Склады</div>
+      <div class="space-y-3">
         {#each warehouses as warehouse}
           <FilterCheckbox
             label={warehouse.name}
             checked={isWarehouseSelected(warehouse.id)}
-            count={warehouse.parts_count}
             onToggle={(checked) => handleWarehouseToggle(warehouse.id, checked)}
           />
         {/each}
       </div>
     </div>
     
-    <!-- Наличие -->
+    <!-- В наличии -->
     <div>
       <FilterCheckbox
         label="Только в наличии"
@@ -201,10 +255,11 @@
     
     <!-- Сортировка -->
     <div>
-      <label class="block text-sm font-medium text-neutral-700 mb-2">Сортировка</label>
+      <label for="sort-select" class="block text-sm font-medium text-secondary-700 mb-3">Сортировка</label>
       <select 
+        id="sort-select"
         value={filters.ordering || '-created_at'} 
-        on:change={(e) => handleInputChange('ordering', e.target.value)}
+        onchange={(e) => handleInputChange('ordering', e.target.value)}
         class="input"
       >
         <option value="-created_at">Новинки</option>
@@ -223,10 +278,10 @@
     <div class="mt-6 md:hidden">
       <div class="flex flex-wrap gap-2">
         {#if filters.search}
-          <span class="inline-flex items-center px-2 py-1 text-xs bg-primary-100 text-primary-800 rounded">
+          <span class="badge-primary">
             Поиск: {filters.search}
             <button
-              on:click={() => handleInputChange('search', '')}
+              onclick={() => { searchValue = ''; handleInputChange('search', ''); }}
               class="ml-1 text-primary-600 hover:text-primary-800"
             >
               ×
@@ -238,10 +293,10 @@
           {#each filters.brand.split(',') as brandId}
             {@const brand = brands.find(b => b.id == brandId)}
             {#if brand}
-              <span class="inline-flex items-center px-2 py-1 text-xs bg-primary-100 text-primary-800 rounded">
+              <span class="badge-primary">
                 Бренд: {brand.name}
                 <button
-                  on:click={() => handleBrandToggle(brandId, false)}
+                  onclick={() => handleBrandToggle(brandId, false)}
                   class="ml-1 text-primary-600 hover:text-primary-800"
                 >
                   ×
@@ -252,10 +307,10 @@
         {/if}
         
         {#if filters.in_stock}
-          <span class="inline-flex items-center px-2 py-1 text-xs bg-primary-100 text-primary-800 rounded">
+          <span class="badge-primary">
             В наличии
             <button
-              on:click={() => handleInputChange('in_stock', false)}
+              onclick={() => handleInputChange('in_stock', false)}
               class="ml-1 text-primary-600 hover:text-primary-800"
             >
               ×

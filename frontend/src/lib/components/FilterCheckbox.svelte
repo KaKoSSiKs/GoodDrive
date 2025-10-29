@@ -1,11 +1,13 @@
 <script>
-  // Пропсы компонента
-  export let label = '';
-  export let checked = false;
-  export let disabled = false;
-  export let onToggle = () => {};
-  export let count = null;
-  export let showCount = true;
+  // Пропсы компонента (Svelte 5 синтаксис)
+  let {
+    label = '',
+    checked = $bindable(false),
+    disabled = false,
+    onToggle = () => {},
+    count = null,
+    showCount = true
+  } = $props();
   
   // Обработчики
   function handleToggle() {
@@ -21,10 +23,10 @@
   }
 </script>
 
-<label 
+<div 
   class="flex items-center space-x-3 cursor-pointer {disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-neutral-50'} p-2 rounded-lg transition-colors"
-  on:click={handleToggle}
-  on:keydown={handleKeyDown}
+  onclick={handleToggle}
+  onkeydown={handleKeyDown}
   tabindex="0"
   role="checkbox"
   aria-checked={checked}
@@ -67,11 +69,11 @@
   {#if checked}
     <div class="w-2 h-2 bg-primary-500 rounded-full"></div>
   {/if}
-</label>
+</div>
 
 <style>
   /* Фокус для доступности */
-  label:focus {
+  div:focus {
     outline: 2px solid #F97316;
     outline-offset: 2px;
   }
@@ -81,4 +83,5 @@
     transition: all 0.2s ease-in-out;
   }
 </style>
+
 

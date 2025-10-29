@@ -202,3 +202,10 @@ const response = await fetch(`${import.meta.env.VITE_API_URL}/parts/`);
 - **Largest Contentful Paint:** < 2.5s
 - **Cumulative Layout Shift:** < 0.1
 
+
+
+
+
+
+
+

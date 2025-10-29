@@ -29,3 +29,10 @@ class FileViewSet(viewsets.ModelViewSet):
         response['Content-Disposition'] = f'attachment; filename="{file_obj.name}"'
         return response
 
+
+
+
+
+
+
+

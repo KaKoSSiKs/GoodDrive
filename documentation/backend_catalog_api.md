@@ -296,3 +296,7 @@ GET /api/warehouses/
 - `ordering` - Поля для сортировки: title, price_opt, available, created_at, updated_at
 - По умолчанию: сортировка по дате создания (новые сначала)
 
+
+
+
+

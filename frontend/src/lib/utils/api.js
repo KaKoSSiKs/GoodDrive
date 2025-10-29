@@ -1,6 +1,6 @@
 // Утилиты для работы с API GoodDrive
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 // Базовый класс для работы с API
 class ApiClient {
@@ -78,27 +78,27 @@ const api = new ApiClient();
 export const partsApi = {
   // Получить список автозапчастей
   async getParts(params = {}) {
-    return api.get('/parts/', params);
+    return api.get('/api/parts/', params);
   },
   
   // Получить детали автозапчасти
   async getPart(id) {
-    return api.get(`/parts/${id}/`);
+    return api.get(`/api/parts/${id}/`);
   },
   
   // Получить похожие автозапчасти
   async getSimilarParts(id) {
-    return api.get(`/parts/${id}/similar/`);
+    return api.get(`/api/parts/${id}/similar/`);
   },
   
   // Получить только доступные автозапчасти
   async getAvailableParts(params = {}) {
-    return api.get('/parts/available/', params);
+    return api.get('/api/parts/available/', params);
   },
   
   // Получить автозапчасти с низким остатком
   async getLowStockParts(params = {}) {
-    return api.get('/parts/low_stock/', params);
+    return api.get('/api/parts/low_stock/', params);
   },
 };
 
@@ -106,12 +106,12 @@ export const partsApi = {
 export const brandsApi = {
   // Получить список брендов
   async getBrands(params = {}) {
-    return api.get('/brands/', params);
+    return api.get('/api/brands/', params);
   },
   
   // Получить детали бренда
   async getBrand(id) {
-    return api.get(`/brands/${id}/`);
+    return api.get(`/api/brands/${id}/`);
   },
 };
 
@@ -119,12 +119,12 @@ export const brandsApi = {
 export const warehousesApi = {
   // Получить список складов
   async getWarehouses(params = {}) {
-    return api.get('/warehouses/', params);
+    return api.get('/api/warehouses/', params);
   },
   
   // Получить детали склада
   async getWarehouse(id) {
-    return api.get(`/warehouses/${id}/`);
+    return api.get(`/api/warehouses/${id}/`);
   },
 };
 
@@ -132,12 +132,12 @@ export const warehousesApi = {
 export const seoApi = {
   // Получить SEO метаданные для страницы
   async getPageMeta(slug) {
-    return api.get(`/seo/meta/${slug}/`);
+    return api.get(`/api/meta/${slug}/`);
   },
   
   // Получить глобальные SEO настройки
   async getSettings() {
-    return api.get('/seo/settings/');
+    return api.get('/api/settings/');
   },
 };
 
@@ -145,7 +145,7 @@ export const seoApi = {
 export const filesApi = {
   // Получить список файлов
   async getFiles(params = {}) {
-    return api.get('/files/', params);
+    return api.get('/api/files/', params);
   },
   
   // Загрузить файл
@@ -153,7 +153,7 @@ export const filesApi = {
     const formData = new FormData();
     formData.append('file', file);
     
-    return api.request('/files/', {
+    return api.request('/api/files/', {
       method: 'POST',
       body: formData,
       headers: {}, // Убираем Content-Type для FormData
@@ -162,7 +162,7 @@ export const filesApi = {
   
   // Удалить файл
   async deleteFile(id) {
-    return api.delete(`/files/${id}/`);
+    return api.delete(`/api/files/${id}/`);
   },
 };
 
@@ -170,22 +170,22 @@ export const filesApi = {
 export const ordersApi = {
   // Создать заказ
   async createOrder(orderData) {
-    return api.post('/orders/', orderData);
+    return api.post('/api/orders/', orderData);
   },
   
   // Получить список заказов
   async getOrders(params = {}) {
-    return api.get('/orders/', params);
+    return api.get('/api/orders/', params);
   },
   
   // Получить заказ по ID
   async getOrder(id) {
-    return api.get(`/orders/${id}/`);
+    return api.get(`/api/orders/${id}/`);
   },
   
   // Обновить статус заказа
   async updateOrderStatus(id, status, comment = '') {
-    return api.post(`/orders/${id}/update_status/`, {
+    return api.post(`/api/orders/${id}/update_status/`, {
       status,
       comment
     });
@@ -193,17 +193,17 @@ export const ordersApi = {
   
   // Получить заказы по телефону
   async getOrdersByPhone(phone) {
-    return api.get('/orders/by_phone/', { phone });
+    return api.get('/api/orders/by_phone/', { phone });
   },
   
   // Получить статистику заказов
   async getOrderStatistics() {
-    return api.get('/orders/statistics/');
+    return api.get('/api/orders/statistics/');
   },
   
   // Получить историю статусов заказа
   async getOrderStatusHistory(id) {
-    return api.get(`/orders/${id}/status_history/`);
+    return api.get(`/api/orders/${id}/status_history/`);
   },
 };
 

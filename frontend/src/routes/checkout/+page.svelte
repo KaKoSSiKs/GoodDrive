@@ -86,7 +86,7 @@
     
     try {
       // Подготавливаем данные заказа
-      const orderData = {
+      const orderPayload = {
         customer_name: form.customer_name.trim(),
         customer_phone: form.customer_phone.trim(),
         customer_email: form.customer_email.trim() || null,
@@ -101,7 +101,7 @@
       };
       
       // Отправляем заказ
-      const response = await ordersApi.createOrder(orderData);
+      const response = await ordersApi.createOrder(orderPayload);
       
       // Сохраняем данные заказа
       orderData = response;
@@ -204,7 +204,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Форма -->
         <div class="lg:col-span-2">
-          <form on:submit={handleSubmit} class="space-y-8">
+          <form onsubmit={handleSubmit} class="space-y-8">
             <!-- Контактная информация -->
             <div class="card p-6">
               <h2 class="text-xl font-semibold text-neutral-900 mb-6">Контактная информация</h2>
@@ -414,4 +414,5 @@
     </div>
   </div>
 {/if}
+
 

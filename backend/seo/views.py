@@ -162,3 +162,10 @@ def yandex_verification(request):
     else:
         return HttpResponse("Код подтверждения не настроен", status=404)
 
+
+
+
+
+
+
+

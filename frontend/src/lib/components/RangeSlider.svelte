@@ -1,11 +1,13 @@
 <script>
-  // Пропсы компонента
-  export let min = 0;
-  export let max = 100000;
-  export let step = 100;
-  export let value = { min: min, max: max };
-  export let onInput = () => {};
-  export let disabled = false;
+  // Пропсы компонента (Svelte 5 синтаксис)
+  let {
+    min = 0,
+    max = 100000,
+    step = 100,
+    value = { min: min, max: max },
+    onInput = () => {},
+    disabled = false
+  } = $props();
   
   // Реактивное состояние
   let minValue = $state(value.min);
@@ -13,9 +15,9 @@
   let isDragging = $state(false);
   
   // Производные значения
-  const range = $derived(max - min);
-  const minPercent = $derived(((minValue - min) / range) * 100);
-  const maxPercent = $derived(((maxValue - min) / range) * 100);
+  let range = $derived(max - min);
+  let minPercent = $derived(((minValue - min) / range) * 100);
+  let maxPercent = $derived(((maxValue - min) / range) * 100);
   
   // Обработчики
   function handleMinInput(event) {
@@ -78,10 +80,10 @@
 <div class="w-full">
   <!-- Заголовок и сброс -->
   <div class="flex items-center justify-between mb-4">
-    <label class="text-sm font-medium text-neutral-700">Цена, ₽</label>
+    <label for="range-slider" class="text-sm font-medium text-neutral-700">Цена, ₽</label>
     {#if minValue !== min || maxValue !== max}
       <button
-        on:click={resetRange}
+        onclick={resetRange}
         class="text-xs text-primary-500 hover:text-primary-600 font-medium"
         disabled={disabled}
       >
@@ -102,18 +104,20 @@
       
       <!-- Минимальный слайдер -->
       <input
+        id="range-slider"
         type="range"
         min={min}
         max={max}
         step={step}
         bind:value={minValue}
-        on:input={handleMinInput}
-        on:mousedown={handleMinMouseDown}
-        on:mousemove={handleMouseMove}
-        on:mouseup={handleMouseUp}
+        oninput={handleMinInput}
+        onmousedown={handleMinMouseDown}
+        onmousemove={handleMouseMove}
+        onmouseup={handleMouseUp}
         class="absolute w-full h-2 bg-transparent appearance-none cursor-pointer min-slider"
         style="z-index: 2;"
         disabled={disabled}
+        aria-label="Минимальная цена"
       />
       
       <!-- Максимальный слайдер -->
@@ -123,10 +127,10 @@
         max={max}
         step={step}
         bind:value={maxValue}
-        on:input={handleMaxInput}
-        on:mousedown={handleMaxMouseDown}
-        on:mousemove={handleMouseMove}
-        on:mouseup={handleMouseUp}
+        oninput={handleMaxInput}
+        onmousedown={handleMaxMouseDown}
+        onmousemove={handleMouseMove}
+        onmouseup={handleMouseUp}
         class="absolute w-full h-2 bg-transparent appearance-none cursor-pointer max-slider"
         style="z-index: 2;"
         disabled={disabled}
@@ -136,13 +140,25 @@
       <div 
         class="absolute w-4 h-4 bg-white border-2 border-primary-500 rounded-full shadow-md transform -translate-y-1 cursor-pointer"
         style="left: {minPercent}%; z-index: 3;"
-        on:mousedown={handleMinMouseDown}
+        onmousedown={handleMinMouseDown}
+        role="slider"
+        tabindex="0"
+        aria-label="Минимальная цена"
+        aria-valuemin={min}
+        aria-valuemax={max}
+        aria-valuenow={minValue}
       ></div>
       
       <div 
         class="absolute w-4 h-4 bg-white border-2 border-primary-500 rounded-full shadow-md transform -translate-y-1 cursor-pointer"
         style="left: {maxPercent}%; z-index: 3;"
-        on:mousedown={handleMaxMouseDown}
+        onmousedown={handleMaxMouseDown}
+        role="slider"
+        tabindex="0"
+        aria-label="Максимальная цена"
+        aria-valuemin={min}
+        aria-valuemax={max}
+        aria-valuenow={maxValue}
       ></div>
     </div>
   </div>
@@ -150,28 +166,30 @@
   <!-- Поля ввода -->
   <div class="flex items-center space-x-2 mt-4">
     <div class="flex-1">
-      <label class="block text-xs text-neutral-500 mb-1">От</label>
+      <label for="min-input" class="block text-xs text-neutral-500 mb-1">От</label>
       <input
+        id="min-input"
         type="number"
         min={min}
         max={max}
         step={step}
         bind:value={minValue}
-        on:input={handleMinInput}
+        oninput={handleMinInput}
         class="input text-sm py-1 px-2"
         disabled={disabled}
       />
     </div>
     
     <div class="flex-1">
-      <label class="block text-xs text-neutral-500 mb-1">До</label>
+      <label for="max-input" class="block text-xs text-neutral-500 mb-1">До</label>
       <input
+        id="max-input"
         type="number"
         min={min}
         max={max}
         step={step}
         bind:value={maxValue}
-        on:input={handleMaxInput}
+        oninput={handleMaxInput}
         class="input text-sm py-1 px-2"
         disabled={disabled}
       />
@@ -217,4 +235,5 @@
     cursor: not-allowed;
   }
 </style>
+
 

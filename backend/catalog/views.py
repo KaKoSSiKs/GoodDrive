@@ -1,6 +1,7 @@
 from rest_framework import viewsets, filters, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
 from .models import Brand, Warehouse, Part, PartImage
@@ -9,6 +10,13 @@ from .serializers import (
     PartListSerializer, PartDetailSerializer, PartCreateUpdateSerializer
 )
 from .filters import PartFilter
+
+
+class PartPagination(PageNumberPagination):
+    """Пагинация для автозапчастей"""
+    page_size = 12
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 
 class BrandViewSet(viewsets.ReadOnlyModelViewSet):
@@ -39,6 +47,7 @@ class PartViewSet(viewsets.ModelViewSet):
     search_fields = ['title', 'label', 'original_number', 'manufacturer_number', 'description']
     ordering_fields = ['title', 'price_opt', 'available', 'created_at', 'updated_at']
     ordering = ['-created_at']
+    pagination_class = PartPagination
     
     def get_serializer_class(self):
         """Выбираем сериализатор в зависимости от действия"""
@@ -104,4 +113,7 @@ class PartViewSet(viewsets.ModelViewSet):
         
         serializer = PartListSerializer(similar_parts, many=True)
         return Response(serializer.data)
+
+
+
 

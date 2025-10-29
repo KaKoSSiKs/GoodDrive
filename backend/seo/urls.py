@@ -14,3 +14,10 @@ urlpatterns = [
     path('yandex-verification.html', views.yandex_verification, name='yandex-verification'),
 ]
 
+
+
+
+
+
+
+
