@@ -7,6 +7,7 @@
   // Реактивное состояние с новой реактивностью Svelte 5
   let cartItemsCount = $state(0);
   let isMenuOpen = $state(false);
+  let logoLoadFailed = $state(false);
   
   // Загрузка количества товаров в корзине
   function loadCartCount() {
@@ -52,10 +53,14 @@
     <div class="flex items-center justify-between h-16">
       <!-- Логотип -->
       <div class="flex items-center">
-        <a href="/" class="flex items-center space-x-2">
-          <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
-            <span class="text-white font-bold text-lg">G</span>
-          </div>
+        <a href="/" class="flex items-center space-x-2" aria-label="GoodDrive">
+          {#if !logoLoadFailed}
+            <img src="/images/logo.jpg" alt="GoodDrive" class="h-8 w-auto" onerror={() => logoLoadFailed = true} />
+          {:else}
+            <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
+              <span class="text-white font-bold text-lg">G</span>
+            </div>
+          {/if}
           <span class="text-xl font-bold text-neutral-900">GoodDrive</span>
         </a>
       </div>
@@ -85,10 +90,8 @@
         </nav>
         
         <!-- Корзина -->
-        <a href="/cart" class="relative p-2 text-neutral-700 hover:text-primary-500 transition-colors">
-          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
-          </svg>
+        <a href="/cart" class="relative p-2 text-neutral-700 hover:text-primary-500 transition-colors" aria-label="Корзина">
+          <img src="/icons/shoping_cart.png" alt="Корзина" class="h-6 w-6" />
           {#if cartItemsCount > 0}
             <span class="absolute -top-1 -right-1 bg-primary-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
               {cartItemsCount}

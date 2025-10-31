@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
-  import { partsApi, brandsApi, seoApi } from '$lib/utils/api.js';
+  import { partsApi, brandsApi, seoApi, cartUtils } from '$lib/utils/api.js';
   import PartCard from '$lib/components/PartCard.svelte';
   import SeoHead from '$lib/components/SeoHead.svelte';
   import { generateOrganizationJsonLd } from '$lib/utils/seo.js';
@@ -32,6 +32,17 @@
     name: '',
     phone: ''
   });
+  let heroImageFailed = $state(false);
+  
+  function handleAddToCart(event) {
+    const { part } = event.detail;
+    cartUtils.addToCart(part);
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+    notification.textContent = `Добавлено в корзину: ${part.title}`;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 3000);
+  }
 
   // Загрузка данных
   async function loadData() {
@@ -85,8 +96,16 @@
 />
 
 <!-- Hero секция -->
-<section class="relative bg-gradient-to-br from-dark-500 via-gray-800 to-dark-500 text-white overflow-hidden">
+<section class="relative bg-gradient-to-br from-dark-500 via-gray-800 to-dark-500 text-white overflow-hidden min-h-screen">
   <!-- Декоративные элементы -->
+  {#if !heroImageFailed}
+    <img
+      src="/images/img_car.jpg"
+      alt="Быстрая доставка автозапчастей"
+      class="absolute inset-0 w-full h-full object-cover object-center opacity-80"
+      onerror={() => heroImageFailed = true}
+    />
+  {/if}
   <div class="absolute inset-0 bg-black/40"></div>
   <div class="absolute top-0 left-0 w-full h-full">
     <div class="absolute top-20 left-10 w-72 h-72 bg-red-600/10 rounded-full blur-3xl"></div>
@@ -131,10 +150,8 @@
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
       <a href="/catalog?brand=" class="card group hover:border-primary-500 transition-all duration-300">
         <div class="p-6 text-center">
-          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-500 group-hover:scale-110 transition-all">
-            <svg class="w-8 h-8 text-primary-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
-            </svg>
+          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-500 group-hover:scale-110 transition-all">
+            <img src="/icons/electronics_ic.png" alt="Электроника" class="w-10 h-10 object-contain icon-maroon" />
           </div>
           <h3 class="font-bold text-dark-500 mb-2">Электроника</h3>
           <p class="text-sm text-gray-600">Датчики, модули, провода</p>
@@ -143,10 +160,8 @@
       
       <a href="/catalog?warehouse=" class="card group hover:border-primary-500 transition-all duration-300">
         <div class="p-6 text-center">
-          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-500 group-hover:scale-110 transition-all">
-            <svg class="w-8 h-8 text-primary-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-            </svg>
+          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-500 group-hover:scale-110 transition-all">
+            <img src="/icons/engine_ic.png" alt="Двигатель" class="w-10 h-10 object-contain icon-maroon" />
           </div>
           <h3 class="font-bold text-dark-500 mb-2">Двигатель</h3>
           <p class="text-sm text-gray-600">Фильтры, масла, ремни</p>
@@ -155,10 +170,8 @@
       
       <a href="/catalog?brand=" class="card group hover:border-primary-500 transition-all duration-300">
         <div class="p-6 text-center">
-          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-500 group-hover:scale-110 transition-all">
-            <svg class="w-8 h-8 text-primary-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
+          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-500 group-hover:scale-110 transition-all">
+            <img src="/icons/suspension_ic.png" alt="Подвеска" class="w-10 h-10 object-contain icon-maroon" />
           </div>
           <h3 class="font-bold text-dark-500 mb-2">Подвеска</h3>
           <p class="text-sm text-gray-600">Стойки, амортизаторы, пружины</p>
@@ -167,10 +180,8 @@
       
       <a href="/catalog?warehouse=" class="card group hover:border-primary-500 transition-all duration-300">
         <div class="p-6 text-center">
-          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-500 group-hover:scale-110 transition-all">
-            <svg class="w-8 h-8 text-primary-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
-            </svg>
+          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-500 group-hover:scale-110 transition-all">
+            <img src="/icons/brake_ic.png" alt="Тормоза" class="w-10 h-10 object-contain icon-maroon" />
           </div>
           <h3 class="font-bold text-dark-500 mb-2">Тормоза</h3>
           <p class="text-sm text-gray-600">Колодки, диски, суппорты</p>
@@ -209,7 +220,7 @@
     {:else if featuredParts.length > 0}
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {#each featuredParts as part}
-          <PartCard {part} />
+          <PartCard {part} on:addToCart={handleAddToCart} />
         {/each}
       </div>
     {/if}

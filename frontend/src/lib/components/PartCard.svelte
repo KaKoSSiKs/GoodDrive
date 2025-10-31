@@ -1,5 +1,7 @@
 <script>
   // Пропсы компонента (Svelte 5 синтаксис)
+  import { createEventDispatcher } from 'svelte';
+  import { formatUtils } from '$lib/utils/api.js';
   let {
     part,
     showWarehouse = false,
@@ -9,6 +11,7 @@
   // Реактивное состояние
   let isImageLoading = $state(true);
   let imageError = $state(false);
+  const dispatch = createEventDispatcher();
   
   // Производные значения
   let hasImage = $derived(part.main_image?.url);
@@ -37,15 +40,8 @@
   function handleAddToCart(event) {
     event.preventDefault();
     event.stopPropagation();
-    
     if (!isInStock) return;
-    
-    // Создаем событие для добавления в корзину
-    const customEvent = new CustomEvent('addToCart', {
-      detail: { part },
-      bubbles: true
-    });
-    event.target.dispatchEvent(customEvent);
+    dispatch('addToCart', { part });
   }
 </script>
 
@@ -119,7 +115,7 @@
     <div class="space-y-4">
       <div class="text-center">
         <div class="text-2xl font-bold text-gradient mb-1">
-          {part.price_opt ? `${part.price_opt.toLocaleString()} ₽` : 'Цена по запросу'}
+          {part.price_opt ? formatUtils.formatPrice(Number(part.price_opt)) : 'Цена по запросу'}
         </div>
         {#if part.available > 0}
           <div class="text-sm text-secondary-500">
@@ -134,9 +130,7 @@
         class="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
       >
         {#if isInStock}
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
-          </svg>
+          <img src="/icons/shoping_cart.png" alt="В корзину" class="w-4 h-4 mr-2 object-contain icon-white" />
           В корзину
         {:else}
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -15,7 +15,7 @@
   let seoMeta = $state(null);
 
   // Производные значения
-  const productId = $derived(page.params.id);
+  const productId = $derived($page.params.id);
   const hasImages = $derived(part?.images?.length > 0);
   const currentImage = $derived(part?.images?.[selectedImageIndex]);
   const isInStock = $derived(part?.available > 0);
@@ -46,7 +46,7 @@
 
     isLoading = true;
     try {
-      const partData = await partsApi.getPartDetail(productId);
+      const partData = await partsApi.getPart(productId);
       part = partData;
       // Сброс количества при загрузке нового товара
       quantity = 1;
@@ -81,7 +81,7 @@
     try {
       // Предполагаем, что slug для страницы товара может быть 'product-detail'
       // или динамически генерироваться из ID/названия
-      seoMeta = await seoApi.getSeoMeta(`product-${productId}`);
+      seoMeta = await seoApi.getPageMeta(`product-${productId}`);
     } catch (error) {
       console.error('Ошибка загрузки SEO метаданных:', error);
       seoMeta = null; // Сбросить, если не найдено
@@ -309,10 +309,10 @@
             <div class="card p-4 hover:shadow-md transition-shadow">
               <a href="/product/{similarPart.id}" class="block">
                 <div class="aspect-square bg-neutral-100 rounded-lg mb-4 flex items-center justify-center">
-                  {#if similarPart.main_image?.image_url}
+                  {#if similarPart.main_image?.url}
                     <img
-                      src={similarPart.main_image.image_url}
-                      alt={similarPart.main_image.alt_text || similarPart.title}
+                      src={similarPart.main_image.url}
+                      alt={similarPart.main_image.alt || similarPart.title}
                       class="w-full h-full object-cover rounded-lg"
                     />
                   {:else}

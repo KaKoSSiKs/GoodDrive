@@ -39,8 +39,9 @@ class ApiClient {
         url.searchParams.append(key, params[key]);
       }
     });
-    
-    return this.request(url.pathname + url.search);
+
+    // Use absolute URL to respect configured baseURL
+    return this.request(url.toString());
   }
   
   async post(endpoint, data) {
@@ -237,14 +238,17 @@ export const cartUtils = {
     if (existingItem) {
       existingItem.quantity += quantity;
     } else {
+      const brandName = part.brand_name || part.brand?.name || '';
+      const imageUrl = part.main_image?.url || part.images?.[0]?.image_url || null;
+      const available = typeof part.available === 'number' ? part.available : (typeof part.quantity === 'number' ? part.quantity : 0);
       cart.push({
         id: part.id,
         title: part.title,
-        brand: part.brand_name,
+        brand: brandName,
         price: part.price_opt,
-        image: part.main_image?.url,
+        image: imageUrl,
         quantity: quantity,
-        available: part.available,
+        available: available,
       });
     }
     

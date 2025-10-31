@@ -39,6 +39,20 @@
 }
 
 @layer components {
+  .red-icon {
+    filter: brightness(0) saturate(100%) invert(39%) sepia(92%) saturate(2460%) hue-rotate(353deg) brightness(96%) contrast(97%);
+  }
+  /* Тёмно-бордовый цвет для png-иконок и инверсия до белого при hover */
+  .icon-maroon {
+    filter: brightness(0) saturate(100%) invert(8%) sepia(44%) saturate(3625%) hue-rotate(337deg) brightness(74%) contrast(98%);
+    transition: filter 200ms ease;
+  }
+  .group:hover .icon-maroon {
+    filter: brightness(0) invert(1);
+  }
+  .icon-white {
+    filter: brightness(0) invert(1);
+  }
   .btn {
     @apply inline-flex items-center justify-center px-6 py-3 text-sm font-medium rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 transform hover:scale-105 active:scale-95;
   }

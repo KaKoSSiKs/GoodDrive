@@ -261,7 +261,7 @@
           {#each parts as part}
             <PartCard
               {part}
-              onaddToCart={handleAddToCart}
+              on:addToCart={handleAddToCart}
             />
           {/each}
         </div>
