@@ -43,7 +43,13 @@ class OrderViewSet(viewsets.ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         """Создание нового заказа"""
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Order creation request data: {request.data}")
+        
         serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            logger.error(f"Order validation errors: {serializer.errors}")
         serializer.is_valid(raise_exception=True)
         order = serializer.save()
         

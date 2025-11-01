@@ -53,15 +53,15 @@
     <div class="flex items-center justify-between h-16">
       <!-- Логотип -->
       <div class="flex items-center">
-        <a href="/" class="flex items-center space-x-2" aria-label="GoodDrive">
+        <a href="/" class="flex items-center space-x-3" aria-label="GoodDrive">
           {#if !logoLoadFailed}
-            <img src="/images/logo.jpg" alt="GoodDrive" class="h-8 w-auto" onerror={() => logoLoadFailed = true} />
+            <img src="/images/logo.jpg" alt="GoodDrive" class="h-12 w-auto" onerror={() => logoLoadFailed = true} />
           {:else}
-            <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
-              <span class="text-white font-bold text-lg">G</span>
+            <div class="w-12 h-12 bg-primary-500 rounded-lg flex items-center justify-center">
+              <span class="text-white font-bold text-2xl">G</span>
             </div>
           {/if}
-          <span class="text-xl font-bold text-neutral-900">GoodDrive</span>
+          <span class="text-2xl font-bold text-neutral-900">GoodDrive</span>
         </a>
       </div>
       
@@ -81,10 +81,7 @@
           <a href="/catalog" class="text-neutral-700 hover:text-primary-500 transition-colors">
             Каталог
           </a>
-          <a href="/about" class="text-neutral-700 hover:text-primary-500 transition-colors">
-            О нас
-          </a>
-          <a href="/contact" class="text-neutral-700 hover:text-primary-500 transition-colors">
+          <a href="/#contacts" class="text-neutral-700 hover:text-primary-500 transition-colors">
             Контакты
           </a>
         </nav>
@@ -128,10 +125,7 @@
             <a href="/catalog" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors">
               Каталог
             </a>
-            <a href="/about" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors">
-              О нас
-            </a>
-            <a href="/contact" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors">
+            <a href="/#contacts" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors">
               Контакты
             </a>
           </nav>

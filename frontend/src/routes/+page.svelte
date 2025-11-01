@@ -132,12 +132,6 @@
           </svg>
           Перейти в каталог
         </a>
-        <a href="/about" class="btn-outline border-white text-black hover:bg-white hover:text-dark-500 text-lg px-8 py-4">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          О компании
-        </a>
       </div>
     </div>
   </div>
@@ -148,7 +142,7 @@
   <div class="container-custom">
     <h2 class="text-4xl font-bold text-dark-500 mb-12 text-center">Категории запчастей</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      <a href="/catalog?brand=" class="card group hover:border-primary-500 transition-all duration-300">
+      <a href="/catalog?search=датчик%20модуль%20электроника" class="card group hover:border-primary-500 transition-all duration-300">
         <div class="p-6 text-center">
           <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-500 group-hover:scale-110 transition-all">
             <img src="/icons/electronics_ic.png" alt="Электроника" class="w-10 h-10 object-contain icon-maroon" />
@@ -158,7 +152,7 @@
         </div>
       </a>
       
-      <a href="/catalog?warehouse=" class="card group hover:border-primary-500 transition-all duration-300">
+      <a href="/catalog?search=двигатель%20фильтр%20масло%20ремень" class="card group hover:border-primary-500 transition-all duration-300">
         <div class="p-6 text-center">
           <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-500 group-hover:scale-110 transition-all">
             <img src="/icons/engine_ic.png" alt="Двигатель" class="w-10 h-10 object-contain icon-maroon" />
@@ -168,7 +162,7 @@
         </div>
       </a>
       
-      <a href="/catalog?brand=" class="card group hover:border-primary-500 transition-all duration-300">
+      <a href="/catalog?search=подвеска%20стойка%20амортизатор" class="card group hover:border-primary-500 transition-all duration-300">
         <div class="p-6 text-center">
           <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-500 group-hover:scale-110 transition-all">
             <img src="/icons/suspension_ic.png" alt="Подвеска" class="w-10 h-10 object-contain icon-maroon" />
@@ -178,7 +172,7 @@
         </div>
       </a>
       
-      <a href="/catalog?warehouse=" class="card group hover:border-primary-500 transition-all duration-300">
+      <a href="/catalog?search=тормоз%20колодки%20диск" class="card group hover:border-primary-500 transition-all duration-300">
         <div class="p-6 text-center">
           <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-500 group-hover:scale-110 transition-all">
             <img src="/icons/brake_ic.png" alt="Тормоза" class="w-10 h-10 object-contain icon-maroon" />
@@ -296,6 +290,104 @@
   </div>
 </section>
 
+<!-- Контакты и карта -->
+<section id="contacts" class="section-padding bg-white">
+  <div class="container-custom">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold text-dark-500 mb-4">Контакты</h2>
+      <p class="text-xl text-gray-600">Приезжайте к нам или свяжитесь удобным способом</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Информация о контактах -->
+      <div class="space-y-6">
+        <div class="card p-6">
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0">
+              <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-lg font-bold text-dark-500 mb-2">Адрес магазина</h3>
+              <p class="text-gray-600">г. Челябинск</p>
+              <p class="text-gray-600">ул. Артиллерийская, дом 15, корпус 2</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card p-6">
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0">
+              <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+              </div>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-lg font-bold text-dark-500 mb-2">Телефон</h3>
+              <a href="tel:+79227081553" class="text-primary-600 hover:text-primary-700 font-medium">+7 (922) 708-15-53</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card p-6">
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0">
+              <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-lg font-bold text-dark-500 mb-2">Время работы</h3>
+              <p class="text-gray-600">Пн-Пт: 09:00 - 18:00</p>
+              <p class="text-gray-600">Сб: 10:00 - 16:00</p>
+              <p class="text-red-600 font-medium">Вс: Выходной</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card p-6">
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0">
+              <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-lg font-bold text-dark-500 mb-2">Email</h3>
+              <a href="mailto:89227081553@mail.ru" class="text-primary-600 hover:text-primary-700 font-medium">89227081553@mail.ru</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Яндекс карта -->
+      <div class="card overflow-hidden h-[600px]">
+        <div style="position:relative;overflow:hidden;height:100%;">
+          <iframe 
+            src="https://yandex.ru/map-widget/v1/?ll=61.424401%2C55.187617&z=17&l=map&pt=61.424401,55.187617,pm2rdm" 
+            width="100%" 
+            height="100%" 
+            frameborder="0" 
+            allowfullscreen="true" 
+            style="position:relative;"
+            title="Карта расположения магазина GoodDrive"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- Подбор по автомобилю -->
 <section class="section-padding bg-white">
   <div class="container-custom">
@@ -378,105 +470,103 @@
       </div>
 
       <!-- Статистика -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="card p-8 text-center group hover:border-primary-500 transition-all">
+          <div class="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-500 group-hover:scale-110 transition-all">
+            <svg class="w-10 h-10 text-primary-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-dark-500 mb-3 text-2xl">Доступные цены</h3>
+          <p class="text-gray-600">
+            Конкурентные цены на весь ассортимент. Работаем напрямую с поставщиками
+          </p>
+        </div>
+
+        <div class="card p-8 text-center group hover:border-primary-500 transition-all">
+          <div class="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-500 group-hover:scale-110 transition-all">
+            <svg class="w-10 h-10 text-primary-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h3 class="font-bold text-dark-500 mb-3 text-2xl">Быстрая доставка</h3>
+          <p class="text-gray-600">
+            Доставляем заказы в кратчайшие сроки по всей России
+          </p>
+        </div>
+
         <div class="card p-8 text-center group hover:border-primary-500 transition-all">
           <div class="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-500 group-hover:scale-110 transition-all">
             <svg class="w-10 h-10 text-primary-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>
-          <div class="text-5xl font-bold text-primary-600 mb-3">{stats.totalParts.toLocaleString()}</div>
-          <h3 class="font-bold text-dark-500 mb-3 text-lg">Товаров в каталоге</h3>
-          <p class="text-sm text-gray-600">
-            Гарантия качества. Все товары проходят многоуровневую проверку
-          </p>
-        </div>
-
-        <div class="card p-8 text-center group hover:border-primary-500 transition-all">
-          <div class="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-500 group-hover:scale-110 transition-all">
-            <svg class="w-10 h-10 text-primary-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-            </svg>
-          </div>
-          <div class="text-5xl font-bold text-primary-600 mb-3">1-3</div>
-          <h3 class="font-bold text-dark-500 mb-3 text-lg">Дней доставка</h3>
-          <p class="text-sm text-gray-600">
-            Быстрая доставка. Доставляем заказы по всей России
-          </p>
-        </div>
-
-        <div class="card p-8 text-center group hover:border-primary-500 transition-all">
-          <div class="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-500 group-hover:scale-110 transition-all">
-            <svg class="w-10 h-10 text-primary-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-          </div>
-          <div class="text-5xl font-bold text-primary-600 mb-3">{stats.brands}</div>
-          <h3 class="font-bold text-dark-500 mb-3 text-lg">Брендов</h3>
-          <p class="text-sm text-gray-600">
-            Опытные специалисты. Команда готова помочь с выбором
+          <h3 class="font-bold text-dark-500 mb-3 text-2xl">Гарантия качества</h3>
+          <p class="text-gray-600">
+            Все товары сертифицированы и проходят проверку качества
           </p>
         </div>
       </div>
+    </div>
+  </div>
+</section>
 
-      <!-- Дополнительные преимущества -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="flex items-start p-6 bg-white rounded-xl border border-gray-200 hover:border-primary-500 transition-all">
-          <div class="flex-shrink-0">
-            <div class="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center">
-              <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <h3 class="font-bold text-dark-500 mb-2">Доступные цены</h3>
-            <p class="text-sm text-gray-600">Конкурентные цены на весь ассортимент</p>
-          </div>
-        </div>
+<!-- Отзывы клиентов с Яндекс.Карт -->
+<section class="section-padding bg-gray-50">
+  <div class="container-custom">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold text-dark-500 mb-4">Отзывы наших клиентов</h2>
+      <p class="text-xl text-gray-600">
+        Нам доверяют тысячи автовладельцев
+      </p>
+    </div>
 
-        <div class="flex items-start p-6 bg-white rounded-xl border border-gray-200 hover:border-primary-500 transition-all">
-          <div class="flex-shrink-0">
-            <div class="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center">
-              <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <h3 class="font-bold text-dark-500 mb-2">Гарантия качества</h3>
-            <p class="text-sm text-gray-600">Гарантия качества на все товары</p>
-          </div>
-        </div>
-
-        <div class="flex items-start p-6 bg-white rounded-xl border border-gray-200 hover:border-primary-500 transition-all">
-          <div class="flex-shrink-0">
-            <div class="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center">
-              <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <h3 class="font-bold text-dark-500 mb-2">Быстрая доставка</h3>
-            <p class="text-sm text-gray-600">Доставляем в кратчайшие сроки</p>
-          </div>
-        </div>
-
-        <div class="flex items-start p-6 bg-white rounded-xl border border-gray-200 hover:border-primary-500 transition-all">
-          <div class="flex-shrink-0">
-            <div class="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center">
-              <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-              </svg>
-            </div>
-          </div>
-          <div class="ml-4">
-            <h3 class="font-bold text-dark-500 mb-2">Поддержка 24/7</h3>
-            <p class="text-sm text-gray-600">Круглосуточная поддержка клиентов</p>
-          </div>
+    <!-- Виджет отзывов Яндекс.Карт -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+      <div style="min-height:500px;">
+        <iframe 
+          src="https://yandex.ru/maps-reviews-widget/229678936575?comments" 
+          style="width:100%;height:600px;border:none;display:block;"
+          title="Отзывы клиентов на Яндекс.Картах"
+        ></iframe>
+      </div>
+      <div class="p-6 bg-gray-50 border-t border-gray-200">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+          <p class="text-gray-600 flex items-center justify-center">
+            <svg class="w-5 h-5 mr-2 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+            Реальные отзывы с Яндекс.Карт
+          </p>
+          <a 
+            href="https://yandex.ru/maps/56/chelyabinsk/?ll=61.424521%2C55.187700&mode=poi&poi%5Bpoint%5D=61.424401%2C55.187617&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D229678936575&tab=reviews&z=20" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="btn-outline text-sm flex items-center"
+          >
+            Посмотреть все отзывы
+            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
         </div>
       </div>
+    </div>
+
+    <!-- Призыв к действию -->
+    <div class="mt-8 text-center">
+      <p class="text-gray-600 mb-4 text-lg">Оставьте свой отзыв о нашей работе</p>
+      <a 
+        href="https://yandex.ru/maps/56/chelyabinsk/?ll=61.424521%2C55.187700&mode=poi&poi%5Bpoint%5D=61.424401%2C55.187617&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D229678936575&tab=reviews&z=20" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="btn-primary inline-flex items-center justify-center"
+      >
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+        Написать отзыв
+      </a>
     </div>
   </div>
 </section>

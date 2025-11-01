@@ -86,9 +86,12 @@
     
     try {
       // Подготавливаем данные заказа
+      // Очищаем телефон от форматирования (оставляем только цифры и +)
+      const cleanedPhone = form.customer_phone.trim().replace(/[\s\-\(\)]/g, '');
+      
       const orderPayload = {
         customer_name: form.customer_name.trim(),
-        customer_phone: form.customer_phone.trim(),
+        customer_phone: cleanedPhone,
         customer_email: form.customer_email.trim() || null,
         delivery_address: form.delivery_address.trim(),
         delivery_city: form.delivery_city.trim(),
