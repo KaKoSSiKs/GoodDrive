@@ -1,1 +1,1 @@
-# Commands package
+# Management commands для каталога автозапчастей

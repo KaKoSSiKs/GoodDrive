@@ -19,8 +19,8 @@ class PartPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class BrandViewSet(viewsets.ReadOnlyModelViewSet):
-    """ViewSet для брендов (только чтение)"""
+class BrandViewSet(viewsets.ModelViewSet):
+    """ViewSet для брендов (чтение + создание)"""
     queryset = Brand.objects.all()
     serializer_class = BrandSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -29,8 +29,8 @@ class BrandViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ['name']
 
 
-class WarehouseViewSet(viewsets.ReadOnlyModelViewSet):
-    """ViewSet для складов (только чтение)"""
+class WarehouseViewSet(viewsets.ModelViewSet):
+    """ViewSet для складов (чтение + создание)"""
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -87,8 +87,8 @@ class PartViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'])
     def low_stock(self, request):
-        """Получить автозапчасти с низким остатком (available <= 5)"""
-        queryset = self.get_queryset().filter(available__lte=5)
+        """Получить автозапчасти с низким остатком (available <= 3)"""
+        queryset = self.get_queryset().filter(available__lte=3)
         
         # Применяем фильтры
         queryset = self.filter_queryset(queryset)

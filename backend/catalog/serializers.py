@@ -88,17 +88,38 @@ class PartDetailSerializer(serializers.ModelSerializer):
 
 class PartCreateUpdateSerializer(serializers.ModelSerializer):
     """Сериализатор для создания и обновления автозапчастей"""
-    images = PartImageSerializer(many=True, required=False)
+    images = PartImageSerializer(many=True, required=False, read_only=True)
+    brand_name = serializers.CharField(write_only=True, required=False)
+    warehouse_name = serializers.CharField(write_only=True, required=False)
     
     class Meta:
         model = Part
         fields = [
             'is_active', 'title', 'label', 'original_number',
-            'manufacturer_number', 'brand', 'warehouse', 'quantity',
-            'stock', 'reserve', 'price_opt', 'description', 'images'
+            'manufacturer_number', 'brand', 'brand_name', 'warehouse', 
+            'warehouse_name', 'quantity', 'stock', 'reserve', 'price_opt', 
+            'cost_price', 'description', 'images'
         ]
     
     def create(self, validated_data):
+        # Обработка brand_name - создаём бренд если указан
+        brand_name = validated_data.pop('brand_name', None)
+        if brand_name and not validated_data.get('brand'):
+            brand, _ = Brand.objects.get_or_create(
+                name=brand_name,
+                defaults={'country': 'Не указана'}
+            )
+            validated_data['brand'] = brand
+        
+        # Обработка warehouse_name - создаём склад если указан
+        warehouse_name = validated_data.pop('warehouse_name', None)
+        if warehouse_name and not validated_data.get('warehouse'):
+            warehouse, _ = Warehouse.objects.get_or_create(
+                name=warehouse_name,
+                defaults={'address': 'Не указан'}
+            )
+            validated_data['warehouse'] = warehouse
+        
         images_data = validated_data.pop('images', [])
         part = Part.objects.create(**validated_data)
         
@@ -108,6 +129,24 @@ class PartCreateUpdateSerializer(serializers.ModelSerializer):
         return part
     
     def update(self, instance, validated_data):
+        # Обработка brand_name
+        brand_name = validated_data.pop('brand_name', None)
+        if brand_name:
+            brand, _ = Brand.objects.get_or_create(
+                name=brand_name,
+                defaults={'country': 'Не указана'}
+            )
+            validated_data['brand'] = brand
+        
+        # Обработка warehouse_name
+        warehouse_name = validated_data.pop('warehouse_name', None)
+        if warehouse_name:
+            warehouse, _ = Warehouse.objects.get_or_create(
+                name=warehouse_name,
+                defaults={'address': 'Не указан'}
+            )
+            validated_data['warehouse'] = warehouse
+        
         images_data = validated_data.pop('images', [])
         
         # Обновляем основную информацию
