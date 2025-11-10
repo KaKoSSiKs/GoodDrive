@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import { partsApi, cartUtils, seoApi, formatUtils } from '$lib/utils/api.js';
+  import { partsApi, cartUtils, seoApi, formatUtils, imageUtils } from '$lib/utils/api.js';
   import { goto } from '$app/navigation';
   import SeoHead from '$lib/components/SeoHead.svelte';
   import { generateProductJsonLd, generateBreadcrumbJsonLd } from '$lib/utils/seo.js';
@@ -18,6 +18,7 @@
   const productId = $derived($page.params.id);
   const hasImages = $derived(part?.images?.length > 0);
   const currentImage = $derived(part?.images?.[selectedImageIndex]);
+  const currentImageUrl = $derived(imageUtils.getAbsoluteUrl(currentImage?.image_url));
   const isInStock = $derived(part?.available > 0);
   const maxQuantity = $derived(Math.min(part?.available || 0, 10)); // Ограничение до 10 для примера
 
@@ -177,7 +178,7 @@
         <div class="aspect-square bg-neutral-100 rounded-lg mb-4 flex items-center justify-center">
           {#if currentImage}
             <img
-              src={currentImage.image_url}
+              src={currentImageUrl}
               alt={currentImage.alt_text || part.title}
               class="w-full h-full object-contain rounded-lg"
             />
@@ -196,7 +197,7 @@
                 class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 {index === selectedImageIndex ? 'border-primary-500' : 'border-neutral-200'} focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <img
-                  src={image.image_url}
+                  src={imageUtils.getAbsoluteUrl(image.image_url)}
                   alt={image.alt_text || part.title}
                   class="w-full h-full object-cover"
                 />

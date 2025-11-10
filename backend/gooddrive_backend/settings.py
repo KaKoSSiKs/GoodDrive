@@ -29,6 +29,9 @@ INSTALLED_APPS = [
     'catalog',
     'seo',
     'orders',
+    'notifications',
+    'finance',
+    'crm',
 ]
 
 MIDDLEWARE = [

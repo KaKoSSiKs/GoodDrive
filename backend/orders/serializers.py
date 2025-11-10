@@ -14,7 +14,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
             'id', 'part', 'part_id', 'quantity', 
             'unit_price', 'total_price'
         ]
-        read_only_fields = ['id', 'total_price']
+        read_only_fields = ['id', 'unit_price', 'total_price']
 
 
 class OrderStatusHistorySerializer(serializers.ModelSerializer):

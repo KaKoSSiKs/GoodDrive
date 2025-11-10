@@ -2,6 +2,9 @@
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
+// Экспортируем API_BASE_URL для использования в других модулях
+export { API_BASE_URL };
+
 // Базовый класс для работы с API
 class ApiClient {
   constructor(baseURL = API_BASE_URL) {
@@ -214,7 +217,27 @@ export const cartUtils = {
   getCart() {
     try {
       const cart = localStorage.getItem('gooddrive_cart');
-      return cart ? JSON.parse(cart) : [];
+      if (!cart) return [];
+      
+      const parsedCart = JSON.parse(cart);
+      
+      // Миграция: преобразуем относительные URL в абсолютные для существующих товаров
+      const migratedCart = parsedCart.map(item => {
+        if (item.image && !item.image.startsWith('http://') && !item.image.startsWith('https://')) {
+          return {
+            ...item,
+            image: this.getAbsoluteImageUrl(item.image)
+          };
+        }
+        return item;
+      });
+      
+      // Если были изменения, сохраняем обновленную корзину
+      if (JSON.stringify(parsedCart) !== JSON.stringify(migratedCart)) {
+        this.saveCart(migratedCart);
+      }
+      
+      return migratedCart;
     } catch (error) {
       console.error('Error loading cart:', error);
       return [];
@@ -230,6 +253,17 @@ export const cartUtils = {
     }
   },
   
+  // Преобразовать относительный URL в абсолютный
+  getAbsoluteImageUrl(imageUrl) {
+    if (!imageUrl) return null;
+    // Если URL уже абсолютный (начинается с http:// или https://), возвращаем как есть
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+    // Если URL относительный, добавляем базовый URL
+    return `${API_BASE_URL}${imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl}`;
+  },
+  
   // Добавить товар в корзину
   addToCart(part, quantity = 1) {
     const cart = this.getCart();
@@ -239,7 +273,9 @@ export const cartUtils = {
       existingItem.quantity += quantity;
     } else {
       const brandName = part.brand_name || part.brand?.name || '';
-      const imageUrl = part.main_image?.url || part.images?.[0]?.image_url || null;
+      let imageUrl = part.main_image?.url || part.images?.[0]?.image_url || null;
+      // Преобразуем относительный URL в абсолютный
+      imageUrl = this.getAbsoluteImageUrl(imageUrl);
       const available = typeof part.available === 'number' ? part.available : (typeof part.quantity === 'number' ? part.quantity : 0);
       cart.push({
         id: part.id,
@@ -310,6 +346,133 @@ export const cartUtils = {
     const cart = this.getCart();
     return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   },
+};
+
+// Утилиты для работы с изображениями
+export const imageUtils = {
+  // Преобразовать относительный URL изображения в абсолютный
+  getAbsoluteUrl(imageUrl) {
+    if (!imageUrl) return null;
+    // Если URL уже абсолютный (начинается с http:// или https://), возвращаем как есть
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+    // Если URL относительный, добавляем базовый URL
+    return `${API_BASE_URL}${imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl}`;
+  },
+};
+
+// API для работы с CRM
+export const crmApi = {
+  async getCustomers(params = {}) {
+    return api.get('/api/customers/', params);
+  },
+  async getCustomer(id) {
+    return api.get(`/api/customers/${id}/`);
+  },
+  async createCustomer(data) {
+    return api.post('/api/customers/', data);
+  },
+  async updateCustomer(id, data) {
+    return api.patch(`/api/customers/${id}/`, data);
+  },
+  async getCustomerOrders(id) {
+    return api.get(`/api/customers/${id}/orders_history/`);
+  },
+  async syncFromOrders() {
+    return api.post('/api/customers/sync_from_orders/');
+  },
+  async getCustomerNotes(customerId) {
+    return api.get('/api/customer-notes/', { customer: customerId });
+  },
+  async createCustomerNote(data) {
+    return api.post('/api/customer-notes/', data);
+  }
+};
+
+// API для работы с финансами
+export const financeApi = {
+  // Категории расходов
+  async getExpenseCategories() {
+    return api.get('/api/expense-categories/');
+  },
+  
+  async createExpenseCategory(data) {
+    return api.post('/api/expense-categories/', data);
+  },
+  
+  // Расходы
+  async getExpenses(params = {}) {
+    return api.get('/api/expenses/', params);
+  },
+  
+  async createExpense(data) {
+    return api.post('/api/expenses/', data);
+  },
+  
+  async deleteExpense(id) {
+    return api.delete(`/api/expenses/${id}/`);
+  },
+  
+  // Денежные транзакции (касса)
+  async getCashTransactions(params = {}) {
+    return api.get('/api/cash-transactions/', params);
+  },
+  
+  async createCashTransaction(data) {
+    return api.post('/api/cash-transactions/', data);
+  },
+  
+  async getBalance() {
+    return api.get('/api/cash-transactions/balance/');
+  },
+  
+  // Отчёты о прибыли
+  async getProfitReports(params = {}) {
+    return api.get('/api/profit-reports/', params);
+  },
+  
+  async getProfitSummary(period = 30) {
+    return api.get('/api/profit-reports/summary/', { period });
+  }
+};
+
+// API для работы с уведомлениями
+export const notificationsApi = {
+  // Получить список уведомлений
+  async getNotifications(params = {}) {
+    return api.get('/api/notifications/', params);
+  },
+  
+  // Получить количество непрочитанных
+  async getUnreadCount() {
+    return api.get('/api/notifications/unread_count/');
+  },
+  
+  // Отметить уведомление как прочитанное
+  async markAsRead(id) {
+    return api.post(`/api/notifications/${id}/mark_read/`);
+  },
+  
+  // Отметить все как прочитанные
+  async markAllAsRead() {
+    return api.post('/api/notifications/mark_all_read/');
+  },
+  
+  // Удалить все уведомления
+  async clearAll() {
+    return api.delete('/api/notifications/clear_all/');
+  },
+  
+  // Получить настройки уведомлений
+  async getSettings() {
+    return api.get('/api/notification-settings/');
+  },
+  
+  // Обновить настройки уведомлений
+  async updateSettings(data) {
+    return api.put('/api/notification-settings/', data);
+  }
 };
 
 // Утилиты для форматирования

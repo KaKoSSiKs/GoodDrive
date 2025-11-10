@@ -8,16 +8,16 @@ class Order(models.Model):
     """Модель заказа"""
     
     STATUS_CHOICES = [
-        ('pending', 'Ожидает обработки'),
+        ('new', 'Новый заказ'),
         ('processing', 'В обработке'),
         ('shipped', 'Отправлен'),
-        ('delivered', 'Доставлен'),
-        ('cancelled', 'Отменен'),
+        ('completed', 'Завершён'),
+        ('canceled', 'Отменён'),
     ]
     
     # Уникальный номер заказа
     order_number = models.CharField(
-        max_length=20,
+        max_length=50,
         unique=True,
         verbose_name="Номер заказа",
         help_text="Уникальный номер заказа"
@@ -65,7 +65,7 @@ class Order(models.Model):
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default='pending',
+        default='new',
         verbose_name="Статус заказа"
     )
     

@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { partsApi } from '$lib/utils/api.js';
+  import { partsApi, imageUtils } from '$lib/utils/api.js';
   
   // Пропсы компонента (Svelte 5 синтаксис)
   let {
@@ -196,7 +196,7 @@
             <div class="w-12 h-12 bg-neutral-100 rounded-lg flex items-center justify-center flex-shrink-0">
               {#if suggestion.main_image}
                 <img 
-                  src={suggestion.main_image.url} 
+                  src={imageUtils.getAbsoluteUrl(suggestion.main_image.url)} 
                   alt={suggestion.main_image.alt || suggestion.title}
                   class="w-full h-full object-cover rounded-lg"
                 />

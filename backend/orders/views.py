@@ -33,8 +33,8 @@ class OrderViewSet(viewsets.ModelViewSet):
     
     def get_permissions(self):
         """Права доступа в зависимости от действия"""
-        if self.action == 'create':
-            # Создание заказа доступно всем
+        if self.action in ['create', 'statistics', 'list', 'retrieve', 'update_status', 'status_history']:
+            # Создание заказа, просмотр и изменение статуса доступно всем (для админки)
             permission_classes = [AllowAny]
         else:
             # Остальные действия только для авторизованных
@@ -53,6 +53,13 @@ class OrderViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         order = serializer.save()
         
+        # Отправляем уведомление о новом заказе
+        try:
+            from notifications.utils import notify_new_order
+            notify_new_order(order)
+        except Exception as e:
+            logger.error(f"Error sending notification: {e}")
+        
         # Возвращаем полную информацию о заказе
         response_serializer = OrderSerializer(order)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
@@ -65,7 +72,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         serializer = OrderStatusHistorySerializer(history, many=True)
         return Response(serializer.data)
     
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[AllowAny])
     def update_status(self, request, pk=None):
         """Обновить статус заказа"""
         order = self.get_object()
@@ -115,7 +122,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         serializer = OrderListSerializer(orders, many=True)
         return Response(serializer.data)
     
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def statistics(self, request):
         """Получить статистику заказов"""
         from django.db.models import Count, Sum, Avg

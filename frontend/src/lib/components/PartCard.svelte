@@ -1,7 +1,7 @@
 <script>
   // Пропсы компонента (Svelte 5 синтаксис)
   import { createEventDispatcher } from 'svelte';
-  import { formatUtils } from '$lib/utils/api.js';
+  import { formatUtils, imageUtils } from '$lib/utils/api.js';
   let {
     part,
     showWarehouse = false,
@@ -15,6 +15,7 @@
   
   // Производные значения
   let hasImage = $derived(part.main_image?.url);
+  let imageUrl = $derived(imageUtils.getAbsoluteUrl(part.main_image?.url));
   let isInStock = $derived(part.available > 0);
   let stockStatus = $derived(
     part.available === 0 ? 'Нет в наличии' :
@@ -50,7 +51,7 @@
   <div class="aspect-square bg-gradient-to-br from-secondary-50 to-secondary-100 rounded-xl mb-6 flex items-center justify-center overflow-hidden relative">
     {#if hasImage && !imageError}
       <img 
-        src={part.main_image.url} 
+        src={imageUrl} 
         alt={part.main_image.alt || part.title}
         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
         onload={handleImageLoad}
