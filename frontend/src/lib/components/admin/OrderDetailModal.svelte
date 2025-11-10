@@ -72,12 +72,12 @@
 {#if isOpen}
   <!-- Overlay -->
   <div 
-    class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+    class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 sm:p-4"
     onclick={handleClose}
   >
     <!-- Modal -->
     <div 
-      class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+      class="bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-4xl w-full max-h-[95vh] overflow-y-auto"
       onclick={(e) => e.stopPropagation()}
     >
       {#if isLoadingDetails}
@@ -88,7 +88,7 @@
         </div>
       {:else if orderDetails}
         <!-- Заголовок -->
-        <div class="p-6 border-b border-gray-200">
+        <div class="p-4 sm:p-6 border-b border-gray-200">
           <div class="flex items-center justify-between mb-4">
             <div>
               <h2 class="text-2xl font-bold text-gray-900">Заказ #{orderDetails.order_number}</h2>
@@ -132,7 +132,7 @@
         </div>
         
         <!-- Контент -->
-        <div class="p-6 space-y-6">
+        <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
           <!-- Информация о клиенте -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="bg-gray-50 rounded-xl p-4">
@@ -182,39 +182,46 @@
           
           <!-- Товары -->
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Состав заказа</h3>
+            <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Состав заказа</h3>
             <div class="space-y-3">
               {#each orderDetails.items as item}
-                <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl">
-                  <!-- Изображение -->
-                  {#if item.part.main_image?.url}
-                    <img 
-                      src={item.part.main_image.url} 
-                      alt={item.part.title}
-                      class="w-16 h-16 object-cover rounded-lg"
-                    />
-                  {:else}
-                    <div class="w-16 h-16 bg-gray-200 rounded-lg"></div>
-                  {/if}
-                  
-                  <!-- Информация -->
-                  <div class="flex-1">
-                    <h4 class="font-medium text-gray-900 text-sm">{item.part.title}</h4>
-                    <p class="text-xs text-gray-500">{item.part.brand_name}</p>
-                    {#if item.part.original_number}
-                      <p class="text-xs text-gray-500 font-mono">{item.part.original_number}</p>
+                <div class="bg-gray-50 rounded-xl p-3 sm:p-4">
+                  <div class="flex items-start gap-3">
+                    <!-- Изображение -->
+                    {#if item.part.main_image?.url}
+                      <img 
+                        src={item.part.main_image.url} 
+                        alt={item.part.title}
+                        class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-lg flex-shrink-0"
+                      />
+                    {:else}
+                      <div class="w-14 h-14 sm:w-16 sm:h-16 bg-gray-200 rounded-lg flex-shrink-0"></div>
                     {/if}
+                    
+                    <!-- Информация -->
+                    <div class="flex-1 min-w-0">
+                      <h4 class="font-medium text-gray-900 text-sm sm:text-base mb-1 line-clamp-2">{item.part.title}</h4>
+                      <p class="text-xs text-gray-500">{item.part.brand_name}</p>
+                      {#if item.part.original_number}
+                        <p class="text-xs text-gray-500 font-mono">{item.part.original_number}</p>
+                      {/if}
+                    </div>
                   </div>
                   
-                  <!-- Количество и цена -->
-                  <div class="text-right">
-                    <p class="text-sm text-gray-600">x{item.quantity} шт.</p>
-                    <p class="text-sm font-semibold text-gray-900">{formatUtils.formatPrice(Number(item.unit_price))}</p>
-                  </div>
-                  
-                  <div class="text-right">
-                    <p class="text-xs text-gray-500">Итого</p>
-                    <p class="text-lg font-bold text-primary-600">{formatUtils.formatPrice(Number(item.total_price))}</p>
+                  <!-- Количество и цена (отдельная строка) -->
+                  <div class="mt-3 pt-3 border-t border-gray-200 grid grid-cols-3 gap-2 sm:gap-4">
+                    <div>
+                      <p class="text-xs text-gray-500">Количество</p>
+                      <p class="text-sm font-medium text-gray-900 whitespace-nowrap">{item.quantity} шт.</p>
+                    </div>
+                    <div>
+                      <p class="text-xs text-gray-500">Цена за шт.</p>
+                      <p class="text-sm font-medium text-gray-900 whitespace-nowrap">{formatUtils.formatPrice(Number(item.unit_price))}</p>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-xs text-gray-500">Итого</p>
+                      <p class="text-base sm:text-lg font-bold text-primary-600 whitespace-nowrap">{formatUtils.formatPrice(Number(item.total_price))}</p>
+                    </div>
                   </div>
                 </div>
               {/each}

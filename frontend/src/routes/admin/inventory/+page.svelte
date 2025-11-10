@@ -159,68 +159,41 @@
   <title>Остатки склада - Admin</title>
 </svelte:head>
 
-<div class="space-y-6">
+<div class="space-y-4 sm:space-y-6 w-full">
   <!-- Заголовок -->
-  <div class="flex items-center justify-between">
+  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
     <div>
-      <h1 class="text-3xl font-bold text-gray-900">Остатки склада</h1>
-      <p class="text-gray-600 mt-2">Управление товарами и остатками</p>
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Остатки склада</h1>
+      <p class="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">Управление товарами и остатками</p>
     </div>
     <div class="flex space-x-3">
-      <!-- Импорт из Excel -->
-      <div class="relative">
-        <input 
-          type="file" 
-          accept=".xlsx,.xls" 
-          onchange={handleExcelImport}
-          class="hidden"
-          id="excel-import"
-          disabled={isImporting}
-        />
-        <label 
-          for="excel-import" 
-          class="btn-outline flex items-center cursor-pointer {isImporting ? 'opacity-50' : ''}"
-        >
-          {#if isImporting}
-            <div class="animate-spin w-4 h-4 border-2 border-primary-500 border-t-transparent rounded-full mr-2"></div>
-            Импорт...
-          {:else}
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-            </svg>
-            Импорт Excel
-          {/if}
-        </label>
-      </div>
-      
-      <!-- Скачать шаблон -->
-      <a 
-        href={`${API_BASE_URL}/api/parts/excel-template/`}
-        download
-        class="btn-outline flex items-center"
+      <button
+        onclick={handleImportExcel}
+        class="btn-outline flex items-center text-sm"
       >
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
         </svg>
-        Шаблон
-      </a>
+        <span class="hidden sm:inline">Импорт из Excel</span>
+        <span class="sm:hidden">Импорт</span>
+      </button>
       
-      <!-- Добавить товар -->
       <button
         onclick={handleAddProduct}
-        class="btn-primary flex items-center"
+        class="btn-primary flex items-center text-sm"
       >
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
         </svg>
-        Добавить товар
+        <span class="hidden sm:inline">Добавить товар</span>
+        <span class="sm:hidden">Добавить</span>
       </button>
     </div>
   </div>
   
   <!-- Фильтры -->
-  <div class="bg-white rounded-xl shadow-sm p-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+  <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
       <div class="lg:col-span-2">
         <label for="search" class="block text-sm font-medium text-gray-700 mb-2">
           Поиск товара
@@ -301,7 +274,7 @@
   </div>
   
   <!-- Таблица товаров -->
-  <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+  <div class="bg-white rounded-xl shadow-sm overflow-hidden w-full">
     {#if isLoading}
       <div class="p-8 text-center">
         <div class="animate-spin w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full mx-auto"></div>
@@ -349,7 +322,8 @@
                 <td class="py-3 px-2 text-center">
                   <span class="text-xs font-semibold {
                     part.available === 0 ? 'text-red-600' :
-                    part.available <= 5 ? 'text-orange-600' :
+                    part.available <= 3 ? 'text-orange-600' :
+                    part.available <= 10 ? 'text-yellow-600' :
                     'text-green-600'
                   }">
                     {part.available}

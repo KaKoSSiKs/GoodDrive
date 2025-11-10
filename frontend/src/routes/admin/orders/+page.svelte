@@ -86,7 +86,9 @@
       allOrders.forEach(order => {
         const address = (order.delivery_address || '').replace(/\n/g, ' ').replace(/;/g, ',');
         const city = (order.delivery_city || '').replace(/;/g, ',');
-        csv += `${order.order_number};${order.customer_name};${order.customer_phone};${order.customer_email || ''};${city};${address};${order.total_amount};${order.status_display};${new Date(order.created_at).toLocaleString('ru-RU')}\n`;
+        const email = (order.customer_email || '').replace(/;/g, ',');
+        const phone = `="${order.customer_phone}"`; // Формат для Excel чтобы не конвертировал в число
+        csv += `${order.order_number};${order.customer_name};${phone};${email};${city};${address};${order.total_amount};${order.status_display};${new Date(order.created_at).toLocaleString('ru-RU')}\n`;
       });
       
       // Скачивание
@@ -110,16 +112,16 @@
   <title>Заказы - Admin</title>
 </svelte:head>
 
-<div class="space-y-6">
+<div class="space-y-4 sm:space-y-6 w-full">
   <!-- Заголовок -->
   <div>
-    <h1 class="text-3xl font-bold text-gray-900">Заказы</h1>
-    <p class="text-gray-600 mt-2">Управление заказами клиентов</p>
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Заказы</h1>
+    <p class="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">Управление заказами клиентов</p>
   </div>
   
   <!-- Фильтры -->
-  <div class="bg-white rounded-xl shadow-sm p-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+  <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
       <div class="lg:col-span-2">
         <label for="search" class="block text-sm font-medium text-gray-700 mb-2">
           Поиск
@@ -192,7 +194,7 @@
   </div>
   
   <!-- Таблица заказов -->
-  <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+  <div class="bg-white rounded-xl shadow-sm overflow-hidden w-full">
     {#if isLoading}
       <div class="p-8 text-center">
         <div class="animate-spin w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full mx-auto"></div>
@@ -200,7 +202,7 @@
       </div>
     {:else if orders.length > 0}
       <div class="overflow-x-auto">
-        <table class="w-full">
+        <table class="w-full min-w-[800px]">
           <thead class="bg-gray-50">
             <tr>
               <th class="text-left py-4 px-6 text-sm font-semibold text-gray-700">Номер заказа</th>

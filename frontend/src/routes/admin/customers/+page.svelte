@@ -38,7 +38,7 @@
   <title>Клиенты - Admin</title>
 </svelte:head>
 
-<div class="space-y-6">
+<div class="space-y-4 sm:space-y-6 w-full">
   <div class="flex items-center justify-between">
     <div>
       <h1 class="text-3xl font-bold text-gray-900">Клиенты (CRM)</h1>
