@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { partsApi, formatUtils, brandsApi, warehousesApi } from '$lib/utils/api.js';
+  import { partsApi, formatUtils, brandsApi, warehousesApi, API_BASE_URL } from '$lib/utils/api.js';
   import ProductEditModal from '$lib/components/admin/ProductEditModal.svelte';
   import AddProductModal from '$lib/components/admin/AddProductModal.svelte';
   
@@ -11,6 +11,8 @@
   let selectedPart = $state(null);
   let isModalOpen = $state(false);
   let isAddModalOpen = $state(false);
+  let isImporting = $state(false);
+  let showImportModal = $state(false);
   
   let filters = $state({
     search: '',
@@ -99,6 +101,34 @@
     loadParts();
   }
   
+  function handleImportExcel() {
+    showImportModal = true;
+  }
+  
+  async function handleFileImport(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    try {
+      isImporting = true;
+      const result = await partsApi.importFromExcel(file);
+      
+      alert(`✅ Импорт завершён!\n\nСоздано: ${result.created}\nОбновлено: ${result.updated}\n${result.errors.length > 0 ? `\n⚠️ Ошибки:\n${result.errors.join('\n')}` : ''}`);
+      
+      showImportModal = false;
+      loadParts();
+    } catch (error) {
+      console.error('Error importing:', error);
+      alert('Ошибка импорта файла');
+    } finally {
+      isImporting = false;
+    }
+  }
+  
+  function downloadTemplate() {
+    window.open('http://localhost:8000/api/parts/excel-template/', '_blank');
+  }
+  
   // Экспорт в CSV
   async function exportToCSV() {
     try {
@@ -136,15 +166,56 @@
       <h1 class="text-3xl font-bold text-gray-900">Остатки склада</h1>
       <p class="text-gray-600 mt-2">Управление товарами и остатками</p>
     </div>
-    <button
-      onclick={handleAddProduct}
-      class="btn-primary flex items-center"
-    >
-      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-      </svg>
-      Добавить товар
-    </button>
+    <div class="flex space-x-3">
+      <!-- Импорт из Excel -->
+      <div class="relative">
+        <input 
+          type="file" 
+          accept=".xlsx,.xls" 
+          onchange={handleExcelImport}
+          class="hidden"
+          id="excel-import"
+          disabled={isImporting}
+        />
+        <label 
+          for="excel-import" 
+          class="btn-outline flex items-center cursor-pointer {isImporting ? 'opacity-50' : ''}"
+        >
+          {#if isImporting}
+            <div class="animate-spin w-4 h-4 border-2 border-primary-500 border-t-transparent rounded-full mr-2"></div>
+            Импорт...
+          {:else}
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+            Импорт Excel
+          {/if}
+        </label>
+      </div>
+      
+      <!-- Скачать шаблон -->
+      <a 
+        href={`${API_BASE_URL}/api/parts/excel-template/`}
+        download
+        class="btn-outline flex items-center"
+      >
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        Шаблон
+      </a>
+      
+      <!-- Добавить товар -->
+      <button
+        onclick={handleAddProduct}
+        class="btn-primary flex items-center"
+      >
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+        Добавить товар
+      </button>
+    </div>
   </div>
   
   <!-- Фильтры -->
@@ -329,4 +400,80 @@
   onClose={handleAddModalClose}
   onSuccess={handleProductAdded}
 />
+
+<!-- Модальное окно импорта из Excel -->
+{#if showImportModal}
+  <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onclick={() => showImportModal = false}>
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full" onclick={(e) => e.stopPropagation()}>
+      <div class="p-6 border-b border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-900">Импорт товаров из Excel</h2>
+        <p class="text-sm text-gray-600 mt-2">Загрузите Excel файл с товарами для массового импорта</p>
+      </div>
+      
+      <div class="p-6 space-y-6">
+        <!-- Инструкция -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h3 class="text-sm font-semibold text-blue-900 mb-2">📋 Формат файла</h3>
+          <div class="text-xs text-blue-800 space-y-1">
+            <p><strong>Колонки (по порядку):</strong></p>
+            <ul class="list-disc list-inside ml-2 space-y-1">
+              <li><strong>A:</strong> Название товара (обязательно)</li>
+              <li><strong>B:</strong> Артикул (если указан - товар обновится, иначе создастся новый)</li>
+              <li><strong>C:</strong> Бренд (создастся автоматически если не существует)</li>
+              <li><strong>D:</strong> Склад (создастся автоматически если не существует)</li>
+              <li><strong>E:</strong> Количество на складе</li>
+              <li><strong>F:</strong> Цена продажи (₽)</li>
+              <li><strong>G:</strong> Себестоимость (₽, опционально)</li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Шаблон -->
+        <div class="bg-gray-50 rounded-lg p-4">
+          <p class="text-sm text-gray-700 mb-3">
+            <strong>💡 Совет:</strong> Скачайте шаблон Excel с примерами данных
+          </p>
+          <button
+            onclick={downloadTemplate}
+            class="btn-outline w-full flex items-center justify-center"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Скачать шаблон Excel
+          </button>
+        </div>
+        
+        <!-- Загрузка файла -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Выберите Excel файл</label>
+          <input 
+            type="file" 
+            accept=".xlsx,.xls"
+            onchange={handleFileImport}
+            disabled={isImporting}
+            class="block w-full text-sm text-gray-500
+              file:mr-4 file:py-2 file:px-4
+              file:rounded-lg file:border-0
+              file:text-sm file:font-semibold
+              file:bg-primary-50 file:text-primary-700
+              hover:file:bg-primary-100
+              disabled:opacity-50"
+          />
+        </div>
+        
+        {#if isImporting}
+          <div class="flex items-center justify-center py-8">
+            <div class="animate-spin w-10 h-10 border-4 border-primary-500 border-t-transparent rounded-full mr-3"></div>
+            <span class="text-gray-600 font-medium">Импортирование товаров...</span>
+          </div>
+        {/if}
+      </div>
+      
+      <div class="p-6 border-t border-gray-200 flex justify-end">
+        <button onclick={() => showImportModal = false} class="btn-outline">Закрыть</button>
+      </div>
+    </div>
+  </div>
+{/if}
 

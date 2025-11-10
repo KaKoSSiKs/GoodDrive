@@ -104,6 +104,48 @@ export const partsApi = {
   async getLowStockParts(params = {}) {
     return api.get('/api/parts/low_stock/', params);
   },
+  
+  // Создать товар
+  async createPart(data) {
+    return api.post('/api/parts/', data);
+  },
+  
+  // Обновить товар
+  async updatePart(id, data) {
+    return api.patch(`/api/parts/${id}/`, data);
+  },
+  
+  // Удалить товар
+  async deletePart(id) {
+    return api.delete(`/api/parts/${id}/`);
+  },
+  
+  // Загрузить изображение товара
+  async uploadImage(formData) {
+    const response = await fetch(`${API_BASE_URL}/api/parts/upload-image/`, {
+      method: 'POST',
+      body: formData
+    });
+    if (!response.ok) throw new Error('Upload failed');
+    return await response.json();
+  },
+  
+  // Импорт из Excel
+  async importFromExcel(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await fetch(`${API_BASE_URL}/api/parts/import-excel/`, {
+      method: 'POST',
+      body: formData
+    });
+    if (!response.ok) throw new Error('Import failed');
+    return await response.json();
+  },
+  
+  // Скачать шаблон Excel
+  getExcelTemplateUrl() {
+    return `${API_BASE_URL}/api/parts/excel-template/`;
+  },
 };
 
 // API для работы с брендами
@@ -117,6 +159,11 @@ export const brandsApi = {
   async getBrand(id) {
     return api.get(`/api/brands/${id}/`);
   },
+  
+  // Создать бренд
+  async createBrand(data) {
+    return api.post('/api/brands/', data);
+  },
 };
 
 // API для работы со складами
@@ -129,6 +176,11 @@ export const warehousesApi = {
   // Получить детали склада
   async getWarehouse(id) {
     return api.get(`/api/warehouses/${id}/`);
+  },
+  
+  // Создать склад
+  async createWarehouse(data) {
+    return api.post('/api/warehouses/', data);
   },
 };
 
