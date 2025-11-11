@@ -1,12 +1,14 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from django.db.models import Sum, Count, Avg, Q
 from django.utils import timezone
+from django.db import transaction
 from datetime import timedelta
+import logging
 from .models import ExpenseCategory, Expense, CashTransaction, ProfitReport
 from .serializers import (
     ExpenseCategorySerializer,
@@ -14,6 +16,8 @@ from .serializers import (
     CashTransactionSerializer,
     ProfitReportSerializer
 )
+
+logger = logging.getLogger(__name__)
 
 
 class ExpenseCategoryViewSet(viewsets.ModelViewSet):
@@ -35,6 +39,45 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     search_fields = ['description']
     ordering_fields = ['date', 'amount']
     ordering = ['-date']
+    
+    def destroy(self, request, *args, **kwargs):
+        """Удаление расхода с логированием"""
+        expense = self.get_object()
+        
+        try:
+            with transaction.atomic():
+                # Логируем удаление
+                logger.warning(
+                    f"Удаление расхода ID:{expense.id} | "
+                    f"Категория: {expense.category.name if expense.category else 'Без категории'} | "
+                    f"Сумма: {expense.amount} ₽ | "
+                    f"Дата: {expense.date} | "
+                    f"Описание: {expense.description[:50]} | "
+                    f"Пользователь: {request.user.username if request.user.is_authenticated else 'Неизвестен'}"
+                )
+                
+                deleted_data = {
+                    'id': expense.id,
+                    'category': expense.category.name if expense.category else None,
+                    'amount': str(expense.amount),
+                    'date': str(expense.date),
+                    'description': expense.description
+                }
+                
+                expense.delete()
+                
+                return Response({
+                    'status': 'success',
+                    'message': 'Расход успешно удален',
+                    'deleted_expense': deleted_data
+                }, status=status.HTTP_200_OK)
+                
+        except Exception as e:
+            logger.error(f"Ошибка при удалении расхода ID:{expense.id}: {str(e)}")
+            return Response({
+                'status': 'error',
+                'message': f'Ошибка при удалении расхода: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class CashTransactionViewSet(viewsets.ModelViewSet):
@@ -48,6 +91,75 @@ class CashTransactionViewSet(viewsets.ModelViewSet):
     search_fields = ['description']
     ordering_fields = ['date', 'amount']
     ordering = ['-date']
+    
+    def destroy(self, request, *args, **kwargs):
+        """Удаление транзакции с логированием и пересчетом баланса"""
+        transaction_obj = self.get_object()
+        
+        # Проверка связи с заказом
+        if transaction_obj.order:
+            logger.warning(
+                f"Попытка удаления транзакции ID:{transaction_obj.id}, связанной с заказом #{transaction_obj.order.order_number}"
+            )
+            return Response({
+                'status': 'error',
+                'message': f'Эта транзакция связана с заказом #{transaction_obj.order.order_number}. Удалите заказ или отвяжите транзакцию.',
+                'order_number': transaction_obj.order.order_number
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            with transaction.atomic():
+                # Логируем удаление
+                logger.warning(
+                    f"Удаление транзакции ID:{transaction_obj.id} | "
+                    f"Тип: {transaction_obj.get_type_display()} | "
+                    f"Сумма: {transaction_obj.amount} ₽ | "
+                    f"Способ: {transaction_obj.get_payment_method_display()} | "
+                    f"Дата: {transaction_obj.date} | "
+                    f"Описание: {transaction_obj.description[:50] if transaction_obj.description else 'Нет'} | "
+                    f"Пользователь: {request.user.username if request.user.is_authenticated else 'Неизвестен'}"
+                )
+                
+                deleted_data = {
+                    'id': transaction_obj.id,
+                    'type': transaction_obj.type,
+                    'type_display': transaction_obj.get_type_display(),
+                    'amount': str(transaction_obj.amount),
+                    'payment_method': transaction_obj.payment_method,
+                    'date': str(transaction_obj.date),
+                    'description': transaction_obj.description
+                }
+                
+                transaction_obj.delete()
+                
+                # Пересчитываем баланс
+                income = CashTransaction.objects.filter(type='income').aggregate(
+                    total=Sum('amount')
+                )['total'] or 0
+                
+                expense = CashTransaction.objects.filter(type='expense').aggregate(
+                    total=Sum('amount')
+                )['total'] or 0
+                
+                new_balance = income - expense
+                
+                return Response({
+                    'status': 'success',
+                    'message': 'Транзакция успешно удалена',
+                    'deleted_transaction': deleted_data,
+                    'current_balance': {
+                        'income': str(income),
+                        'expense': str(expense),
+                        'balance': str(new_balance)
+                    }
+                }, status=status.HTTP_200_OK)
+                
+        except Exception as e:
+            logger.error(f"Ошибка при удалении транзакции ID:{transaction_obj.id}: {str(e)}")
+            return Response({
+                'status': 'error',
+                'message': f'Ошибка при удалении транзакции: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     @action(detail=False, methods=['get'])
     def balance(self, request):

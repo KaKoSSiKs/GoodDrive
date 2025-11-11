@@ -4,12 +4,16 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from django.db import transaction
+import logging
 from .models import Order, OrderItem, OrderStatusHistory
 from .serializers import (
     OrderSerializer, OrderCreateSerializer, OrderUpdateSerializer,
     OrderListSerializer, OrderStatusHistorySerializer
 )
 from .filters import OrderFilter
+
+logger = logging.getLogger(__name__)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -36,6 +40,9 @@ class OrderViewSet(viewsets.ModelViewSet):
         if self.action in ['create', 'statistics', 'list', 'retrieve', 'update_status', 'status_history']:
             # Создание заказа, просмотр и изменение статуса доступно всем (для админки)
             permission_classes = [AllowAny]
+        elif self.action in ['destroy', 'update', 'partial_update']:
+            # Удаление и изменение заказа только для авторизованных
+            permission_classes = [IsAuthenticated]
         else:
             # Остальные действия только для авторизованных
             permission_classes = [IsAuthenticated]
@@ -43,9 +50,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         """Создание нового заказа"""
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.error(f"Order creation request data: {request.data}")
+        logger.info(f"Order creation request data: {request.data}")
         
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
@@ -63,6 +68,56 @@ class OrderViewSet(viewsets.ModelViewSet):
         # Возвращаем полную информацию о заказе
         response_serializer = OrderSerializer(order)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+    
+    def destroy(self, request, *args, **kwargs):
+        """Удаление заказа с логированием и обновлением статистики CRM"""
+        order = self.get_object()
+        order_number = order.order_number
+        customer_phone = order.customer_phone
+        items_count = order.items.count()
+        total_amount = order.total_amount
+        
+        try:
+            with transaction.atomic():
+                # Логируем удаление
+                logger.warning(
+                    f"Удаление заказа #{order_number} | "
+                    f"Клиент: {customer_phone} | "
+                    f"Позиций: {items_count} | "
+                    f"Сумма: {total_amount} ₽ | "
+                    f"Пользователь: {request.user.username if request.user.is_authenticated else 'Неизвестен'}"
+                )
+                
+                # Удаляем заказ (связанные объекты удалятся автоматически через CASCADE)
+                order.delete()
+                
+                # Обновляем статистику клиента в CRM
+                try:
+                    from crm.models import Customer
+                    customer = Customer.objects.filter(phone=customer_phone).first()
+                    if customer:
+                        customer.update_statistics()
+                        logger.info(f"Статистика CRM обновлена для клиента {customer_phone}")
+                except Exception as e:
+                    logger.error(f"Ошибка обновления CRM после удаления заказа: {e}")
+                
+                return Response({
+                    'status': 'success',
+                    'message': f'Заказ #{order_number} успешно удален',
+                    'deleted_order': {
+                        'order_number': order_number,
+                        'customer_phone': customer_phone,
+                        'items_count': items_count,
+                        'total_amount': str(total_amount)
+                    }
+                }, status=status.HTTP_200_OK)
+                
+        except Exception as e:
+            logger.error(f"Ошибка при удалении заказа #{order_number}: {str(e)}")
+            return Response({
+                'status': 'error',
+                'message': f'Ошибка при удалении заказа: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     @action(detail=True, methods=['get'])
     def status_history(self, request, pk=None):

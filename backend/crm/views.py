@@ -41,6 +41,71 @@ class CustomerViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(customer)
         return Response(serializer.data)
     
+    def destroy(self, request, *args, **kwargs):
+        """Удаление клиента с проверкой связанных заказов"""
+        customer = self.get_object()
+        customer_phone = customer.phone
+        customer_name = customer.name
+        
+        # Проверяем наличие связанных заказов
+        from orders.models import Order
+        orders_count = Order.objects.filter(customer_phone=customer_phone).count()
+        
+        # Параметр force для принудительного удаления
+        force_delete = request.query_params.get('force', 'false').lower() == 'true'
+        
+        if orders_count > 0 and not force_delete:
+            logger.warning(
+                f"Попытка удаления клиента {customer_phone} с {orders_count} заказами без force=true"
+            )
+            return Response({
+                'status': 'error',
+                'message': f'У клиента есть {orders_count} заказ(ов). Для удаления используйте параметр ?force=true',
+                'customer': {
+                    'phone': customer_phone,
+                    'name': customer_name,
+                    'orders_count': orders_count
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            with transaction.atomic():
+                # Логируем удаление
+                logger.warning(
+                    f"Удаление клиента: {customer_name} ({customer_phone}) | "
+                    f"Заказов: {orders_count} | "
+                    f"Force: {force_delete} | "
+                    f"Пользователь: {request.user.username if request.user.is_authenticated else 'Неизвестен'}"
+                )
+                
+                # Сохраняем данные для ответа
+                deleted_data = {
+                    'id': customer.id,
+                    'name': customer_name,
+                    'phone': customer_phone,
+                    'email': customer.email,
+                    'total_orders': customer.total_orders,
+                    'total_spent': str(customer.total_spent),
+                    'orders_in_system': orders_count
+                }
+                
+                # Удаляем клиента
+                customer.delete()
+                
+                return Response({
+                    'status': 'success',
+                    'message': f'Клиент {customer_name} успешно удален',
+                    'deleted_customer': deleted_data,
+                    'warning': 'Заказы клиента остались в системе' if orders_count > 0 else None
+                }, status=status.HTTP_200_OK)
+                
+        except Exception as e:
+            logger.error(f"Ошибка при удалении клиента {customer_phone}: {str(e)}")
+            return Response({
+                'status': 'error',
+                'message': f'Ошибка при удалении клиента: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
     @action(detail=False, methods=['post'])
     def sync_from_orders(self, request):
         """Синхронизировать клиентов из заказов"""
