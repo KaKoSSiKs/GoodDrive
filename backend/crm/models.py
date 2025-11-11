@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum, Count, Avg
+from django.utils import timezone
 
 
 class Customer(models.Model):
@@ -169,7 +170,4 @@ class CustomerNote(models.Model):
     
     def __str__(self):
         return f"Заметка о {self.customer.name}"
-
-
-from django.utils import timezone
 
