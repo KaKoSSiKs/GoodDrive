@@ -251,3 +251,4 @@ class Command(BaseCommand):
         url_hash = hashlib.md5(image_obj.image_url.encode()).hexdigest()[:8]
         return f"part_{part_id}_{url_hash}_ai_clean.jpg"
 
+

@@ -50,3 +50,4 @@ Set-Location -Path ".."
 # Пауза
 Read-Host "Нажмите Enter для выхода..."
 
+
