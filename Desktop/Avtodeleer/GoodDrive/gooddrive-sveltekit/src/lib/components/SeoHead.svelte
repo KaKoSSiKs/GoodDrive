@@ -66,16 +66,24 @@
     {/if}
   {/each}
   
-  <!-- Дополнительные метатеги -->
-  <meta name="robots" content="index, follow" />
+  <!-- Дополнительные метатеги для SEO -->
+  <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta name="author" content="GoodDrive" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="publisher" content="GoodDrive" />
+  <meta name="copyright" content="© {new Date().getFullYear()} GoodDrive" />
+  <meta name="language" content="Russian" />
+  <meta name="geo.region" content="RU-CHE" />
+  <meta name="geo.placename" content="Челябинск" />
+  <meta name="geo.position" content="55.187617;61.424401" />
+  <meta name="ICBM" content="55.187617, 61.424401" />
   
-  <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <!-- Yandex Specific -->
+  <meta name="yandex-verification" content="" />
+  <meta name="yandex" content="index, follow" />
+  
+  <!-- Google Specific -->
+  <meta name="google-site-verification" content="" />
+  <meta name="googlebot" content="index, follow" />
   
   <!-- JSON-LD структурированные данные -->
   {#if jsonLd}

@@ -116,5 +116,72 @@
   .badge-accent {
     @apply badge bg-accent-100 text-accent-800;
   }
+  
+  /* Accessibility: Skip to content link */
+  .skip-to-content {
+    @apply fixed top-0 left-0 z-[9999] px-6 py-3 bg-primary-600 text-white font-semibold rounded-br-xl shadow-2xl;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .skip-to-content:focus {
+    transform: translateY(0);
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+  }
+  
+  /* Улучшенный focus для accessibility */
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary-500;
+  }
+  
+  /* Скрытие элементов для скринридеров */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  /* Анимация для skeleton loading */
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s infinite linear;
+    background: linear-gradient(to right, #f0f0f0 0%, #e0e0e0 50%, #f0f0f0 100%);
+    background-size: 2000px 100%;
+  }
+}
+
+/* Улучшения для печати */
+@media print {
+  .no-print,
+  header,
+  footer,
+  nav,
+  .btn {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
 }
 

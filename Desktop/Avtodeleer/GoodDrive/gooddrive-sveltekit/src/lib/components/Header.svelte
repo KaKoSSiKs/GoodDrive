@@ -77,11 +77,17 @@
       <!-- Навигация и корзина -->
       <div class="flex items-center space-x-4">
         <!-- Навигационные ссылки (скрыты на мобильных) -->
-        <nav class="hidden md:flex items-center space-x-6">
-          <a href="/catalog" class="text-neutral-700 hover:text-primary-500 transition-colors">
+        <nav class="hidden md:flex items-center space-x-6" role="navigation" aria-label="Основная навигация">
+          <a href="/catalog" class="text-neutral-700 hover:text-primary-500 transition-colors font-medium">
             Каталог
           </a>
-          <a href="/#contacts" class="text-neutral-700 hover:text-primary-500 transition-colors">
+          <a href="/about" class="text-neutral-700 hover:text-primary-500 transition-colors font-medium">
+            О компании
+          </a>
+          <a href="/faq" class="text-neutral-700 hover:text-primary-500 transition-colors font-medium">
+            FAQ
+          </a>
+          <a href="/#contacts" class="text-neutral-700 hover:text-primary-500 transition-colors font-medium">
             Контакты
           </a>
         </nav>
@@ -121,11 +127,17 @@
           />
           
           <!-- Мобильная навигация -->
-          <nav class="space-y-2">
-            <a href="/catalog" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors">
+          <nav class="space-y-2" role="navigation" aria-label="Мобильная навигация">
+            <a href="/catalog" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors font-medium">
               Каталог
             </a>
-            <a href="/#contacts" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors">
+            <a href="/about" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors font-medium">
+              О компании
+            </a>
+            <a href="/faq" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors font-medium">
+              FAQ
+            </a>
+            <a href="/#contacts" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors font-medium">
               Контакты
             </a>
           </nav>

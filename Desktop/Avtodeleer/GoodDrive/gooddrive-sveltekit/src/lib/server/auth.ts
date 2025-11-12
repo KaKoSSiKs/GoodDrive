@@ -1,6 +1,6 @@
 // Authentication utilities
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import type { User } from '@prisma/client';
 
 const SALT_ROUNDS = 10;

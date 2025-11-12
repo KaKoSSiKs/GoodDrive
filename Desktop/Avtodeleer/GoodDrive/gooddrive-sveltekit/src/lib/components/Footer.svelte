@@ -6,20 +6,24 @@
       title: 'Каталог',
       links: [
         { name: 'Все товары', href: '/catalog' },
-        { name: 'Популярное', href: '/catalog?ordering=-created_at' }
+        { name: 'Популярное', href: '/catalog?ordering=-created_at' },
+        { name: 'В наличии', href: '/catalog?in_stock=true' }
       ]
     },
     {
       title: 'Информация',
       links: [
-        { name: 'Корзина', href: '/cart' },
-        { name: 'Оформление заказа', href: '/checkout' }
+        { name: 'О компании', href: '/about' },
+        { name: 'FAQ', href: '/faq' },
+        { name: 'Корзина', href: '/cart' }
       ]
     },
     {
       title: 'Поддержка',
       links: [
-        { name: 'Контакты', href: '/#contacts' }
+        { name: 'Контакты', href: '/#contacts' },
+        { name: 'Политика конфиденциальности', href: '/privacy' },
+        { name: 'Условия использования', href: '/terms' }
       ]
     }
   ];
@@ -144,6 +148,8 @@
           © {currentYear} GoodDrive. Все права защищены.
         </div>
         <div class="flex items-center space-x-6 text-sm">
+          <a href="/sitemap.xml" class="text-neutral-400 hover:text-white transition-colors">Карта сайта</a>
+          <a href="/rss.xml" class="text-neutral-400 hover:text-white transition-colors">RSS</a>
           <span class="text-neutral-400">Разработка: GoodDrive Team</span>
         </div>
       </div>
