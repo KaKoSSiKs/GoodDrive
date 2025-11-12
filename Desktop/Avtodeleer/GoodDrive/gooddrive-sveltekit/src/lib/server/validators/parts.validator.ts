@@ -6,8 +6,24 @@ export const partsQuerySchema = z.object({
 	page: z.coerce.number().int().min(1).max(1000).default(1),
 	page_size: z.coerce.number().int().min(1).max(100).default(20),
 	search: z.string().max(200).optional(),
-	brand: z.coerce.number().int().positive().optional(),
-	warehouse: z.coerce.number().int().positive().optional(),
+	// Поддержка множественных брендов через запятую: "1,2,3"
+	brand: z.union([
+		z.coerce.number().int().positive(),
+		z.string().transform((val) => {
+			if (!val) return undefined;
+			const ids = val.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id) && id > 0);
+			return ids.length > 0 ? ids : undefined;
+		})
+	]).optional(),
+	// Поддержка множественных складов через запятую: "1,2,3"
+	warehouse: z.union([
+		z.coerce.number().int().positive(),
+		z.string().transform((val) => {
+			if (!val) return undefined;
+			const ids = val.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id) && id > 0);
+			return ids.length > 0 ? ids : undefined;
+		})
+	]).optional(),
 	price_min: z.coerce.number().nonnegative().optional(),
 	price_max: z.coerce.number().nonnegative().optional(),
 	low_stock: z.coerce.boolean().optional(),

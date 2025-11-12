@@ -24,7 +24,7 @@
   
   // Получаем начальные значения фильтров из URL (на верхнем уровне)
   const initialFilters = {
-    search: $page.url.searchParams.get('search') || '',
+    search: ($page.url.searchParams.get('search') || '').replace(/\+/g, ' '),
     brand: $page.url.searchParams.get('brand') || '',
     warehouse: $page.url.searchParams.get('warehouse') || '',
     price_min: $page.url.searchParams.get('price_min') || '',
@@ -135,7 +135,12 @@
     const url = new URL(currentUrl);
     Object.keys(newFilters).forEach(key => {
       if (newFilters[key] && newFilters[key] !== false) {
-        url.searchParams.set(key, newFilters[key]);
+        // Правильно кодируем search параметр (пробелы в +)
+        if (key === 'search' && typeof newFilters[key] === 'string') {
+          url.searchParams.set(key, newFilters[key].replace(/\s+/g, '+'));
+        } else {
+          url.searchParams.set(key, newFilters[key]);
+        }
       } else {
         url.searchParams.delete(key);
       }

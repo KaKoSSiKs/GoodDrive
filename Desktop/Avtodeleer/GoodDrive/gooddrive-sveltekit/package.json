@@ -16,13 +16,15 @@
     "prisma:studio": "prisma studio",
     "db:seed": "node prisma/seed.js",
     "db:reset": "prisma migrate reset --force && npm run db:seed",
-    "import:catalog": "node scripts/import-catalog-csv.js"
+    "import:catalog": "node scripts/import-catalog-csv.js",
+    "generate:images": "node scripts/generate-product-images.js"
   },
   "dependencies": {
     "@prisma/client": "^5.7.0",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
     "lucide-svelte": "^0.468.0",
+    "sharp": "^0.33.5",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -47,4 +49,3 @@
     "npm": ">=10.0.0"
   }
 }
-

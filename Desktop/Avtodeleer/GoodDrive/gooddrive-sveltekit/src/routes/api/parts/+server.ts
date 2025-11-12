@@ -20,44 +20,78 @@ const handler: RequestHandler = async ({ url }) => {
 		throw new ValidationError('Invalid query parameters', error);
 	}
 
-	const { page, page_size, search, brand, warehouse, price_min, price_max, low_stock, available_max, ordering } = params;
+	const { page, page_size, search, brand, warehouse, price_min, price_max, low_stock, available_max, in_stock, ordering } = params;
 
 	// Build where clause
 	const where: Prisma.PartWhereInput = { isActive: true };
 	
-	// Поиск
+	// Поиск (поддержка нескольких слов через пробел или +)
 	if (search) {
-		where.OR = [
-			{ title: { contains: search, mode: 'insensitive' } },
-			{ originalNumber: { contains: search, mode: 'insensitive' } },
-			{ manufacturerNumber: { contains: search, mode: 'insensitive' } }
-		];
+		// Заменяем + на пробелы и разбиваем на слова
+		const searchTerms = search.replace(/\+/g, ' ').trim().split(/\s+/).filter(term => term.length > 0);
+		
+		if (searchTerms.length > 0) {
+			// Если одно слово - простой поиск
+			if (searchTerms.length === 1) {
+				where.OR = [
+					{ title: { contains: searchTerms[0] } },
+					{ originalNumber: { contains: searchTerms[0] } },
+					{ manufacturerNumber: { contains: searchTerms[0] } }
+				];
+			} else {
+				// Если несколько слов - все должны быть найдены (AND)
+				where.AND = where.AND || [];
+				where.AND.push({
+					AND: searchTerms.map(term => ({
+						OR: [
+							{ title: { contains: term } },
+							{ originalNumber: { contains: term } },
+							{ manufacturerNumber: { contains: term } }
+						]
+					}))
+				});
+			}
+		}
 	}
 
-	// Фильтр по бренду
+	// Фильтр по бренду (поддержка множественных значений)
 	if (brand) {
-		where.brandId = brand;
+		if (Array.isArray(brand)) {
+			where.brandId = { in: brand };
+		} else {
+			where.brandId = brand;
+		}
 	}
 
-	// Фильтр по складу
+	// Фильтр по складу (поддержка множественных значений)
 	if (warehouse) {
-		where.warehouseId = warehouse;
+		if (Array.isArray(warehouse)) {
+			where.warehouseId = { in: warehouse };
+		} else {
+			where.warehouseId = warehouse;
+		}
 	}
 
-	// Фильтр по низкому остатку
+	// Фильтр по наличию (объединяем все условия для available)
+	const availableConditions: any = {};
+	
+	if (in_stock) {
+		availableConditions.gt = 0;
+	}
+	
 	if (low_stock) {
-		where.available = {
-			lte: 5,
-			gt: 0
-		};
+		availableConditions.lte = 5;
+		if (!availableConditions.gt) {
+			availableConditions.gt = 0;
+		}
 	}
-
-	// Фильтр по максимальному количеству
+	
 	if (available_max !== undefined) {
-		where.available = {
-			...where.available,
-			lte: available_max
-		};
+		availableConditions.lte = available_max;
+	}
+	
+	if (Object.keys(availableConditions).length > 0) {
+		where.available = availableConditions;
 	}
 
 	// Фильтр по цене

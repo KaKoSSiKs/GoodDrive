@@ -81,8 +81,13 @@ async function importFromCSV() {
 		const brandCache = new Map();
 		const warehouseCache = new Map();
 
-		// Обрабатываем все строки
-		for (let i = 1; i < lines.length; i++) {
+		// Обрабатываем первые 100 строк (для тестирования)
+		const maxRows = 100;
+		const rowsToProcess = Math.min(maxRows, lines.length - 1);
+		
+		console.log(`📦 Будет обработано: ${rowsToProcess} товаров\n`);
+		
+		for (let i = 1; i <= rowsToProcess; i++) {
 			const values = parseCSVLine(lines[i]);
 			
 			if (values.length < 12) {
@@ -237,8 +242,8 @@ async function importFromCSV() {
 				}
 
 				// Прогресс
-				if (i % 100 === 0) {
-					process.stdout.write(`\rОбработано: ${i}/${lines.length - 1} (${Math.round((i / (lines.length - 1)) * 100)}%)`);
+				if (i % 10 === 0) {
+					process.stdout.write(`\rОбработано: ${i}/${rowsToProcess} (${Math.round((i / rowsToProcess) * 100)}%)`);
 				}
 
 			} catch (error) {
