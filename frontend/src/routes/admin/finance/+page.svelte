@@ -46,6 +46,12 @@
     date: new Date().toISOString()
   });
   
+  // Удаление
+  let deletingItem = $state(null);
+  let deleteItemType = $state(''); // 'expense' или 'transaction'
+  let showDeleteConfirm = $state(false);
+  let isDeleting = $state(false);
+  
   async function loadSummary() {
     try {
       isLoading = true;
@@ -126,6 +132,46 @@
       loadExpenses();
     } else if (tab === 'cash' && cashTransactions.length === 0) {
       loadCash();
+    }
+  }
+  
+  function handleDeleteClick(item, type) {
+    deletingItem = item;
+    deleteItemType = type;
+    showDeleteConfirm = true;
+  }
+  
+  async function handleDeleteConfirmed() {
+    if (!deletingItem) return;
+    
+    try {
+      isDeleting = true;
+      
+      if (deleteItemType === 'expense') {
+        await financeApi.deleteExpense(deletingItem.id);
+        alert(`Расход успешно удален`);
+        await loadExpenses();
+        await loadSummary(); // Обновляем сводку
+      } else if (deleteItemType === 'transaction') {
+        const result = await financeApi.deleteCashTransaction(deletingItem.id);
+        alert(`Транзакция успешно удалена`);
+        await loadCash(); // Обновляем баланс и транзакции
+      }
+      
+      showDeleteConfirm = false;
+      deletingItem = null;
+      deleteItemType = '';
+    } catch (error) {
+      console.error('Ошибка удаления:', error);
+      
+      // Проверяем специфичные ошибки
+      if (error.message && error.message.includes('заказ')) {
+        alert('Ошибка: Эта транзакция связана с заказом. Сначала удалите заказ или отвяжите транзакцию.');
+      } else {
+        alert('Ошибка удаления');
+      }
+    } finally {
+      isDeleting = false;
     }
   }
   
@@ -287,6 +333,7 @@
                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Категория</th>
                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Описание</th>
                     <th class="text-right py-3 px-4 text-sm font-semibold text-gray-700">Сумма</th>
+                    <th class="text-center py-3 px-4 text-sm font-semibold text-gray-700">Действия</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -299,6 +346,17 @@
                       <td class="py-3 px-4 text-sm text-gray-600">{expense.description}</td>
                       <td class="py-3 px-4 text-sm font-semibold text-gray-900 text-right">
                         {formatUtils.formatPrice(Number(expense.amount))}
+                      </td>
+                      <td class="py-3 px-4 text-center">
+                        <button
+                          onclick={() => handleDeleteClick(expense, 'expense')}
+                          class="text-red-600 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors"
+                          title="Удалить расход"
+                        >
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
                       </td>
                     </tr>
                   {/each}
@@ -352,6 +410,7 @@
                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Способ</th>
                     <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700">Описание</th>
                     <th class="text-right py-3 px-4 text-sm font-semibold text-gray-700">Сумма</th>
+                    <th class="text-center py-3 px-4 text-sm font-semibold text-gray-700">Действия</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -373,6 +432,17 @@
                         transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
                       }">
                         {transaction.type === 'income' ? '+' : '-'}{formatUtils.formatPrice(Number(transaction.amount))}
+                      </td>
+                      <td class="py-3 px-4 text-center">
+                        <button
+                          onclick={() => handleDeleteClick(transaction, 'transaction')}
+                          class="text-red-600 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors"
+                          title="Удалить транзакцию"
+                        >
+                          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
                       </td>
                     </tr>
                   {/each}
@@ -457,6 +527,63 @@
           <button type="button" onclick={() => showAddTransaction = false} class="btn-outline flex-1">Отмена</button>
         </div>
       </form>
+    </div>
+  </div>
+{/if}
+
+<!-- Модальное окно подтверждения удаления -->
+{#if showDeleteConfirm && deletingItem}
+  <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onclick={() => { showDeleteConfirm = false; deletingItem = null; }}>
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full" onclick={(e) => e.stopPropagation()}>
+      <div class="p-6">
+        <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
+          <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 text-center mb-2">
+          {deleteItemType === 'expense' ? 'Удалить расход?' : 'Удалить транзакцию?'}
+        </h3>
+        <p class="text-sm text-gray-600 text-center mb-2">
+          Вы уверены, что хотите удалить эту запись?
+        </p>
+        <div class="bg-gray-50 rounded-lg p-3 mb-6">
+          {#if deleteItemType === 'expense'}
+            <p class="text-xs text-gray-600">
+              <strong>Категория:</strong> {deletingItem.category_name}<br />
+              <strong>Сумма:</strong> {formatUtils.formatPrice(Number(deletingItem.amount))}<br />
+              <strong>Дата:</strong> {new Date(deletingItem.date).toLocaleDateString('ru-RU')}<br />
+              <strong>Описание:</strong> {deletingItem.description}
+            </p>
+          {:else}
+            <p class="text-xs text-gray-600">
+              <strong>Тип:</strong> {deletingItem.type_display}<br />
+              <strong>Сумма:</strong> {formatUtils.formatPrice(Number(deletingItem.amount))}<br />
+              <strong>Способ:</strong> {deletingItem.payment_method_display}<br />
+              <strong>Описание:</strong> {deletingItem.description}
+            </p>
+          {/if}
+        </div>
+        <p class="text-xs text-gray-500 text-center mb-6">
+          Это действие нельзя отменить.
+        </p>
+        <div class="flex space-x-3">
+          <button
+            onclick={() => { showDeleteConfirm = false; deletingItem = null; }}
+            class="btn-outline flex-1"
+            disabled={isDeleting}
+          >
+            Отмена
+          </button>
+          <button
+            onclick={handleDeleteConfirmed}
+            class="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors disabled:opacity-50"
+            disabled={isDeleting}
+          >
+            {isDeleting ? 'Удаление...' : 'Удалить'}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 {/if}

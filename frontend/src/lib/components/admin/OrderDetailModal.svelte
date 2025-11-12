@@ -8,6 +8,8 @@
   let selectedStatus = $state(order?.status || 'new');
   let orderDetails = $state(null);
   let isLoadingDetails = $state(false);
+  let isDeleting = $state(false);
+  let showDeleteConfirm = $state(false);
   
   const statusOptions = [
     { value: 'new', label: 'Новый заказ', color: 'orange' },
@@ -58,7 +60,30 @@
   
   // Закрытие модалки
   function handleClose() {
+    showDeleteConfirm = false;
     if (onClose) onClose();
+  }
+  
+  // Удаление заказа
+  async function handleDeleteOrder() {
+    if (!orderDetails) return;
+    
+    try {
+      isDeleting = true;
+      await ordersApi.deleteOrder(orderDetails.id);
+      
+      alert(`Заказ #${orderDetails.order_number} успешно удален`);
+      
+      // Уведомляем родителя и закрываем модалку
+      if (onUpdate) onUpdate();
+      if (onClose) onClose();
+    } catch (error) {
+      console.error('Ошибка удаления заказа:', error);
+      alert('Ошибка удаления заказа');
+    } finally {
+      isDeleting = false;
+      showDeleteConfirm = false;
+    }
   }
   
   // Загрузка при открытии
@@ -106,29 +131,38 @@
             </button>
           </div>
           
-          <!-- Кнопки печати -->
-          <div class="flex space-x-2">
-            <a 
-              href={`http://localhost:8000/api/orders/${orderDetails.id}/print-invoice/`}
-              target="_blank"
-              class="btn-outline text-sm flex items-center"
-            >
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-              </svg>
-              Накладная
-            </a>
-            <a 
-              href={`http://localhost:8000/api/orders/${orderDetails.id}/print-receipt/`}
-              target="_blank"
-              class="btn-outline text-sm flex items-center"
-            >
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              Чек
-            </a>
-          </div>
+           <!-- Кнопки печати и удаления -->
+           <div class="flex flex-wrap gap-2">
+             <a 
+               href={`http://localhost:8000/api/orders/${orderDetails.id}/print-invoice/`}
+               target="_blank"
+               class="btn-outline text-sm flex items-center"
+             >
+               <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+               </svg>
+               Накладная
+             </a>
+             <a 
+               href={`http://localhost:8000/api/orders/${orderDetails.id}/print-receipt/`}
+               target="_blank"
+               class="btn-outline text-sm flex items-center"
+             >
+               <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+               </svg>
+               Чек
+             </a>
+             <button
+               onclick={() => showDeleteConfirm = true}
+               class="btn-outline text-sm flex items-center text-red-600 border-red-300 hover:bg-red-50 ml-auto"
+             >
+               <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+               </svg>
+               Удалить заказ
+             </button>
+           </div>
         </div>
         
         <!-- Контент -->
@@ -312,6 +346,42 @@
           </div>
         </div>
       {/if}
+    </div>
+  </div>
+{/if}
+
+<!-- Модальное окно подтверждения удаления -->
+{#if showDeleteConfirm}
+  <div class="fixed inset-0 bg-black bg-opacity-50 z-[60] flex items-center justify-center p-4" onclick={() => showDeleteConfirm = false}>
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full" onclick={(e) => e.stopPropagation()}>
+      <div class="p-6">
+        <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
+          <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 text-center mb-2">Удалить заказ?</h3>
+        <p class="text-sm text-gray-600 text-center mb-6">
+          Вы уверены, что хотите удалить заказ <span class="font-semibold">#{orderDetails?.order_number}</span>?<br />
+          Это действие нельзя отменить.
+        </p>
+        <div class="flex space-x-3">
+          <button
+            onclick={() => showDeleteConfirm = false}
+            class="btn-outline flex-1"
+            disabled={isDeleting}
+          >
+            Отмена
+          </button>
+          <button
+            onclick={handleDeleteOrder}
+            class="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors disabled:opacity-50"
+            disabled={isDeleting}
+          >
+            {isDeleting ? 'Удаление...' : 'Удалить'}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 {/if}

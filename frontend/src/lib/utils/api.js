@@ -261,6 +261,11 @@ export const ordersApi = {
   async getOrderStatusHistory(id) {
     return api.get(`/api/orders/${id}/status_history/`);
   },
+  
+  // Удалить заказ
+  async deleteOrder(id) {
+    return api.delete(`/api/orders/${id}/`);
+  },
 };
 
 // Утилиты для работы с корзиной
@@ -439,6 +444,9 @@ export const crmApi = {
   },
   async createCustomerNote(data) {
     return api.post('/api/customer-notes/', data);
+  },
+  async deleteCustomer(id, force = false) {
+    return api.delete(`/api/customers/${id}/${force ? '?force=true' : ''}`);
   }
 };
 
@@ -473,6 +481,10 @@ export const financeApi = {
   
   async createCashTransaction(data) {
     return api.post('/api/cash-transactions/', data);
+  },
+  
+  async deleteCashTransaction(id) {
+    return api.delete(`/api/cash-transactions/${id}/`);
   },
   
   async getBalance() {

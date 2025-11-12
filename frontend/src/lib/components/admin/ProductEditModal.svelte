@@ -8,6 +8,8 @@
   let warehouses = $state([]);
   let uploadedImages = $state([]);
   let isUploadingImage = $state(false);
+  let isDeleting = $state(false);
+  let showDeleteConfirm = $state(false);
   
   let formData = $state({
     title: '',
@@ -68,6 +70,27 @@
   function removeImage(index) {
     uploadedImages.splice(index, 1);
     uploadedImages = [...uploadedImages];
+  }
+  
+  async function handleDeletePart() {
+    if (!part) return;
+    
+    try {
+      isDeleting = true;
+      await partsApi.deletePart(part.id);
+      
+      alert(`Товар "${part.title}" успешно удален`);
+      
+      // Уведомляем родителя и закрываем модалку
+      if (onUpdate) onUpdate();
+      if (onClose) onClose();
+    } catch (error) {
+      console.error('Ошибка удаления товара:', error);
+      alert('Ошибка удаления товара');
+    } finally {
+      isDeleting = false;
+      showDeleteConfirm = false;
+    }
   }
   
   async function handleSave() {
@@ -295,7 +318,7 @@
       </div>
       
       <!-- Кнопки -->
-      <div class="p-6 border-t border-gray-200 flex space-x-3">
+      <div class="p-6 border-t border-gray-200 flex flex-col sm:flex-row gap-3">
         <button 
           onclick={handleSave}
           disabled={isUpdating}
@@ -304,6 +327,48 @@
           {isUpdating ? 'Сохранение...' : 'Сохранить'}
         </button>
         <button onclick={onClose} class="btn-outline flex-1">Отмена</button>
+        <button 
+          onclick={() => showDeleteConfirm = true}
+          class="btn-outline text-red-600 border-red-300 hover:bg-red-50"
+        >
+          Удалить
+        </button>
+      </div>
+    </div>
+  </div>
+{/if}
+
+<!-- Модальное окно подтверждения удаления -->
+{#if showDeleteConfirm}
+  <div class="fixed inset-0 bg-black bg-opacity-50 z-[60] flex items-center justify-center p-4" onclick={() => showDeleteConfirm = false}>
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full" onclick={(e) => e.stopPropagation()}>
+      <div class="p-6">
+        <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
+          <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 text-center mb-2">Удалить товар?</h3>
+        <p class="text-sm text-gray-600 text-center mb-6">
+          Вы уверены, что хотите удалить товар <span class="font-semibold">"{part?.title}"</span>?<br />
+          Это действие нельзя отменить.
+        </p>
+        <div class="flex space-x-3">
+          <button
+            onclick={() => showDeleteConfirm = false}
+            class="btn-outline flex-1"
+            disabled={isDeleting}
+          >
+            Отмена
+          </button>
+          <button
+            onclick={handleDeletePart}
+            class="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors disabled:opacity-50"
+            disabled={isDeleting}
+          >
+            {isDeleting ? 'Удаление...' : 'Удалить'}
+          </button>
+        </div>
       </div>
     </div>
   </div>
