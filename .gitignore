@@ -28,6 +28,18 @@ node_modules/
 .openjfx/
 .skiko/
 
+# Windows system folders
+Application Data/
+Cookies/
+Local Settings/
+NetHood/
+PrintHood/
+Recent/
+SendTo/
+главное меню/
+Мои документы/
+Шаблоны/
+
 # User directories
 3D Objects/
 Documents/
