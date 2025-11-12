@@ -32,7 +32,7 @@
       isLoading = true;
       const params = {
         ordering: 'available',
-        page_size: 100
+        page_size: 1000 // Увеличено для отображения большего количества товаров
       };
       
       if (filters.search) params.search = filters.search;

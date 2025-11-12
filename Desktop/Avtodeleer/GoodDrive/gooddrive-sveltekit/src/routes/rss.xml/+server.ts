@@ -1,11 +1,14 @@
 import { db } from '$lib/server/db';
 import type { RequestHandler } from './$types';
+import { PUBLIC_SITE_URL } from '$env/static/public';
 
 export const prerender = false;
 
 export const GET: RequestHandler = async () => {
 	try {
-		const baseUrl = 'https://gooddrive.com';
+		// Используем environment variable для base URL
+		// В development будет localhost, в production - реальный домен
+		const baseUrl = PUBLIC_SITE_URL || 'http://localhost:3000';
 		const buildDate = new Date().toUTCString();
 
 		// Получаем последние 50 товаров

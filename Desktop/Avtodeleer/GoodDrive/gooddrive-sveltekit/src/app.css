@@ -75,33 +75,33 @@
 }
 
 @layer components {
-  /* Бордовый цвет для PNG-иконок (primary-700: #b01a44) */
+  /* Синий цвет для PNG-иконок (primary-700: #334e68) */
   .icon-primary {
-    filter: brightness(0) saturate(100%) invert(17%) sepia(82%) saturate(3124%) hue-rotate(333deg) brightness(91%) contrast(91%);
+    filter: brightness(0) saturate(100%) invert(31%) sepia(15%) saturate(1284%) hue-rotate(178deg) brightness(95%) contrast(87%);
     transition: filter 200ms ease;
   }
-  /* При наведении иконки становятся белыми */
+  /* При наведении иконки становятся темнее */
   .group:hover .icon-primary {
-    filter: brightness(0) invert(1);
+    filter: brightness(0) saturate(100%) invert(20%) sepia(15%) saturate(1284%) hue-rotate(178deg) brightness(85%) contrast(87%);
   }
   /* Белые иконки */
   .icon-white {
     filter: brightness(0) invert(1);
   }
-  /* Бордовый цвет для иконок (legacy support) */
+  /* Синий цвет для иконок (legacy support) */
   .icon-maroon {
-    filter: brightness(0) saturate(100%) invert(17%) sepia(82%) saturate(3124%) hue-rotate(333deg) brightness(91%) contrast(91%);
+    filter: brightness(0) saturate(100%) invert(31%) sepia(15%) saturate(1284%) hue-rotate(178deg) brightness(95%) contrast(87%);
     transition: filter 200ms ease;
   }
   .group:hover .icon-maroon {
-    filter: brightness(0) invert(1);
+    filter: brightness(0) saturate(100%) invert(20%) sepia(15%) saturate(1284%) hue-rotate(178deg) brightness(85%) contrast(87%);
   }
   .btn {
-    @apply inline-flex items-center justify-center px-6 py-3 text-sm font-medium rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 transform hover:scale-105 active:scale-95;
+    @apply inline-flex items-center justify-center px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
   }
   
   .btn-primary {
-    @apply btn bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg hover:shadow-xl hover:from-primary-600 hover:to-primary-700 focus:ring-primary-500;
+    @apply btn bg-primary-700 text-white shadow-md hover:shadow-lg hover:bg-primary-800 focus:ring-primary-500 transition-colors duration-200;
   }
   
   .btn-secondary {
@@ -109,7 +109,7 @@
   }
   
   .btn-outline {
-    @apply btn border-2 border-primary-200 bg-white text-primary-700 hover:bg-primary-50 hover:border-primary-300 focus:ring-primary-500 shadow-sm hover:shadow-md;
+    @apply btn border-2 border-primary-300 bg-white text-primary-700 hover:bg-primary-50 hover:border-primary-400 focus:ring-primary-500 shadow-sm hover:shadow-md transition-colors duration-200;
   }
   
   .btn-ghost {
@@ -121,7 +121,7 @@
   }
   
   .card {
-    @apply bg-white rounded-2xl shadow-lg border border-secondary-100 hover:shadow-xl transition-all duration-300 overflow-hidden;
+    @apply bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 overflow-hidden;
   }
   
   .card-hover {
@@ -137,7 +137,7 @@
   }
   
   .text-gradient {
-    @apply bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent;
+    @apply text-primary-700;
   }
   
   .glass {

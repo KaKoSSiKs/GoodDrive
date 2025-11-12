@@ -57,11 +57,11 @@
           {#if !logoLoadFailed}
             <img src="/images/logo.jpg" alt="GoodDrive" class="h-12 w-auto group-hover:scale-105 transition-transform" onerror={() => logoLoadFailed = true} />
           {:else}
-            <div class="w-12 h-12 bg-gradient-to-br from-primary-600 to-brand-700 rounded-xl flex items-center justify-center shadow-md">
-              <span class="text-white font-bold text-2xl">G</span>
+            <div class="w-12 h-12 bg-primary-700 rounded-lg flex items-center justify-center">
+              <span class="text-white font-bold text-xl">G</span>
             </div>
           {/if}
-          <span class="text-2xl font-bold bg-gradient-to-r from-primary-700 to-brand-700 bg-clip-text text-transparent">GoodDrive</span>
+          <span class="text-2xl font-bold text-primary-700">GoodDrive</span>
         </a>
       </div>
       
@@ -77,26 +77,26 @@
       <!-- Навигация и корзина -->
       <div class="flex items-center space-x-4">
         <!-- Навигационные ссылки (скрыты на мобильных) -->
-        <nav class="hidden md:flex items-center space-x-6" role="navigation" aria-label="Основная навигация">
-          <a href="/catalog" class="text-neutral-700 hover:text-primary-500 transition-colors font-medium">
+        <nav class="hidden md:flex items-center space-x-6" aria-label="Основная навигация">
+          <a href="/catalog" class="text-neutral-700 hover:text-primary-700 transition-colors font-medium">
             Каталог
           </a>
-          <a href="/about" class="text-neutral-700 hover:text-primary-500 transition-colors font-medium">
+          <a href="/about" class="text-neutral-700 hover:text-primary-700 transition-colors font-medium">
             О компании
           </a>
-          <a href="/faq" class="text-neutral-700 hover:text-primary-500 transition-colors font-medium">
+          <a href="/faq" class="text-neutral-700 hover:text-primary-700 transition-colors font-medium">
             FAQ
           </a>
-          <a href="/#contacts" class="text-neutral-700 hover:text-primary-500 transition-colors font-medium">
+          <a href="/#contacts" class="text-neutral-700 hover:text-primary-700 transition-colors font-medium">
             Контакты
           </a>
         </nav>
         
         <!-- Корзина -->
-        <a href="/cart" class="relative p-2 text-neutral-700 hover:text-primary-600 transition-all hover:scale-110" aria-label="Корзина">
+        <a href="/cart" class="relative p-2 text-neutral-700 hover:text-primary-700 transition-all" aria-label="Корзина">
           <img src="/icons/shoping_cart.png" alt="Корзина" class="h-6 w-6" />
           {#if cartItemsCount > 0}
-            <span class="absolute -top-1 -right-1 bg-gradient-to-br from-primary-500 to-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold shadow-lg">
+            <span class="absolute -top-1 -right-1 bg-primary-700 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
               {cartItemsCount}
             </span>
           {/if}
@@ -105,7 +105,7 @@
         <!-- Мобильное меню -->
         <button 
           onclick={toggleMenu}
-          class="md:hidden p-2 text-neutral-700 hover:text-primary-500 transition-colors"
+          class="md:hidden p-2 text-neutral-700 hover:text-primary-700 transition-colors"
           aria-label="Toggle menu"
         >
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,17 +127,17 @@
           />
           
           <!-- Мобильная навигация -->
-          <nav class="space-y-2" role="navigation" aria-label="Мобильная навигация">
-            <a href="/catalog" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors font-medium">
+          <nav class="space-y-2" aria-label="Мобильная навигация">
+            <a href="/catalog" class="block py-2 text-neutral-700 hover:text-primary-700 transition-colors font-medium">
               Каталог
             </a>
-            <a href="/about" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors font-medium">
+            <a href="/about" class="block py-2 text-neutral-700 hover:text-primary-700 transition-colors font-medium">
               О компании
             </a>
-            <a href="/faq" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors font-medium">
+            <a href="/faq" class="block py-2 text-neutral-700 hover:text-primary-700 transition-colors font-medium">
               FAQ
             </a>
-            <a href="/#contacts" class="block py-2 text-neutral-700 hover:text-primary-500 transition-colors font-medium">
+            <a href="/#contacts" class="block py-2 text-neutral-700 hover:text-primary-700 transition-colors font-medium">
               Контакты
             </a>
           </nav>

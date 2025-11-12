@@ -4,6 +4,7 @@
   import Footer from '$lib/components/Footer.svelte';
   import ScrollToTop from '$lib/components/ScrollToTop.svelte';
   import ToastContainer from '$lib/components/ToastContainer.svelte';
+  import CookieConsent from '$lib/components/CookieConsent.svelte';
   import { page } from '$app/stores';
   import { browser } from '$app/environment';
   import { onMount } from 'svelte';
@@ -13,16 +14,57 @@
   const isAdminRoute = $derived($page.url.pathname.startsWith('/admin'));
   
   onMount(() => {
-    const YM_COUNTER_ID = '';
-    const GA4_ID = '';
+    if (!browser) return;
     
-    if (YM_COUNTER_ID || GA4_ID) {
-      initAnalytics(YM_COUNTER_ID, GA4_ID);
+    // Проверяем согласие на аналитику перед инициализацией
+    function checkAndInitAnalytics() {
+      const savedConsent = localStorage.getItem('cookie_consent');
+      if (savedConsent) {
+        try {
+          const consent = JSON.parse(savedConsent);
+          if (consent.analytics) {
+            const YM_COUNTER_ID = '';
+            const GA4_ID = '';
+            
+            if (YM_COUNTER_ID || GA4_ID) {
+              initAnalytics(YM_COUNTER_ID, GA4_ID);
+            }
+          }
+        } catch (e) {
+          console.error('Error parsing cookie consent:', e);
+        }
+      }
     }
+    
+    // Проверяем сразу
+    checkAndInitAnalytics();
+    
+    // Слушаем событие согласия на cookies
+    window.addEventListener('cookieConsentGiven', (event) => {
+      if (event.detail?.analytics) {
+        const YM_COUNTER_ID = '';
+        const GA4_ID = '';
+        
+        if (YM_COUNTER_ID || GA4_ID) {
+          initAnalytics(YM_COUNTER_ID, GA4_ID);
+        }
+      }
+    });
   });
   
   $effect(() => {
     if (browser) {
+      // Проверяем согласие перед отправкой аналитики
+      const savedConsent = localStorage.getItem('cookie_consent');
+      if (!savedConsent) return;
+      
+      try {
+        const consent = JSON.parse(savedConsent);
+        if (!consent.analytics) return;
+      } catch (e) {
+        return;
+      }
+      
       const currentPath = $page.url.pathname;
       
       if (typeof window.ym !== 'undefined' && window.YM_COUNTER_ID) {
@@ -51,6 +93,7 @@
     <Footer />
     <ScrollToTop />
     <ToastContainer />
+    <CookieConsent />
   </div>
 {/if}
 

@@ -1,6 +1,34 @@
 <script>
   const currentYear = new Date().getFullYear();
   
+  let newsletterEmail = $state('');
+  let newsletterConsent = $state(false);
+  let newsletterSubmitted = $state(false);
+  let newsletterError = $state('');
+  
+  function handleNewsletterSubmit() {
+    if (!newsletterEmail.trim()) {
+      newsletterError = 'Введите email';
+      return;
+    }
+    
+    if (!newsletterConsent) {
+      newsletterError = 'Необходимо дать согласие на обработку персональных данных';
+      return;
+    }
+    
+    // Здесь должна быть отправка на сервер
+    // Пока просто показываем сообщение об успехе
+    newsletterSubmitted = true;
+    newsletterError = '';
+    newsletterEmail = '';
+    newsletterConsent = false;
+    
+    setTimeout(() => {
+      newsletterSubmitted = false;
+    }, 3000);
+  }
+  
   const footerLinks = [
     {
       title: 'Каталог',
@@ -42,10 +70,10 @@
       <!-- Информация о компании -->
       <div class="lg:col-span-1">
         <div class="flex items-center space-x-2 mb-4">
-          <div class="w-8 h-8 bg-gradient-to-br from-primary-600 to-brand-700 rounded-lg flex items-center justify-center shadow-md">
+          <div class="w-8 h-8 bg-primary-700 rounded-lg flex items-center justify-center">
             <span class="text-white font-bold text-lg">G</span>
           </div>
-          <span class="text-xl font-bold bg-gradient-to-r from-primary-400 to-primary-300 bg-clip-text text-transparent">GoodDrive</span>
+          <span class="text-xl font-bold text-white">GoodDrive</span>
         </div>
         <p class="text-neutral-300 mb-4">
           Интернет-магазин автозапчастей с широким ассортиментом и быстрой доставкой.
@@ -103,7 +131,7 @@
             {#each socialLinks as social}
               <a 
                 href={social.href}
-                class="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-gradient-to-br hover:from-primary-600 hover:to-brand-700 transition-all hover:scale-110 hover:shadow-lg"
+                class="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-primary-700 transition-colors"
                 title={social.name}
               >
                 {#if social.icon === 'telegram'}
@@ -125,17 +153,41 @@
         </div>
         
         <!-- Подписка на новости -->
-        <div class="flex items-center space-x-2">
+        <div class="flex flex-col space-y-2">
           <span class="text-neutral-300">Подписка на новости:</span>
-          <div class="flex">
-            <input 
-              type="email" 
-              placeholder="Ваш email" 
-              class="px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-l-lg text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
-            <button class="px-4 py-2 bg-gradient-to-r from-primary-600 to-brand-700 text-white rounded-r-lg hover:from-primary-700 hover:to-brand-800 transition-all hover:shadow-lg">
-              Подписаться
-            </button>
+          <div class="flex flex-col space-y-2">
+            <div class="flex">
+              <input 
+                type="email" 
+                bind:value={newsletterEmail}
+                placeholder="Ваш email" 
+                class="px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-l-lg text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500 flex-1"
+              />
+              <button 
+                onclick={handleNewsletterSubmit}
+                class="px-4 py-2 bg-primary-700 text-white rounded-r-lg hover:bg-primary-800 transition-colors"
+              >
+                Подписаться
+              </button>
+            </div>
+            <div class="flex items-start space-x-2">
+              <input
+                type="checkbox"
+                id="newsletter_consent"
+                bind:checked={newsletterConsent}
+                class="mt-1 w-4 h-4 text-primary-600 border-neutral-700 rounded focus:ring-primary-500 bg-neutral-800"
+              />
+              <label for="newsletter_consent" class="text-xs text-neutral-400">
+                Я даю согласие на обработку персональных данных в соответствии с 
+                <a href="/privacy" target="_blank" class="text-primary-300 hover:text-primary-200 hover:underline">Политикой конфиденциальности</a>
+              </label>
+            </div>
+            {#if newsletterError}
+              <p class="text-red-400 text-xs">{newsletterError}</p>
+            {/if}
+            {#if newsletterSubmitted}
+              <p class="text-green-400 text-xs">Спасибо за подписку!</p>
+            {/if}
           </div>
         </div>
       </div>

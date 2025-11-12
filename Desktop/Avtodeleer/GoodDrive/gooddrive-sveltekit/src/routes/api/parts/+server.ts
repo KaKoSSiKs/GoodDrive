@@ -2,20 +2,30 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { prisma } from '$lib/server/db';
-import type { PaginatedResponse, ApiResponse } from '$lib/types';
+import type { PaginatedResponse } from '$lib/types';
+import { partsQuerySchema } from '$lib/server/validators/parts.validator';
+import { createApiHandler, handleError, createErrorResponse, ValidationError } from '$lib/server/error-handler';
+import { logger } from '$lib/server/logger';
+import type { Prisma } from '@prisma/client';
 
-export const GET: RequestHandler = async ({ url }) => {
+// Валидация и обработка запроса
+const handler: RequestHandler = async ({ url }) => {
+	// Валидация query параметров
+	const queryParams = Object.fromEntries(url.searchParams.entries());
+	
+	let params;
 	try {
-		const page = parseInt(url.searchParams.get('page') || '1');
-		const pageSize = parseInt(url.searchParams.get('page_size') || '20');
-		const search = url.searchParams.get('search') || '';
-		const brandId = url.searchParams.get('brand');
-		const warehouseId = url.searchParams.get('warehouse');
-		const ordering = url.searchParams.get('ordering') || '-created_at';
+		params = partsQuerySchema.parse(queryParams);
+	} catch (error) {
+		throw new ValidationError('Invalid query parameters', error);
+	}
+
+	const { page, page_size, search, brand, warehouse, price_min, price_max, low_stock, available_max, ordering } = params;
 
 	// Build where clause
-	const where: any = { isActive: true };
+	const where: Prisma.PartWhereInput = { isActive: true };
 	
+	// Поиск
 	if (search) {
 		where.OR = [
 			{ title: { contains: search, mode: 'insensitive' } },
@@ -24,17 +34,18 @@ export const GET: RequestHandler = async ({ url }) => {
 		];
 	}
 
-	if (brandId) {
-		where.brandId = parseInt(brandId);
+	// Фильтр по бренду
+	if (brand) {
+		where.brandId = brand;
 	}
 
-	if (warehouseId) {
-		where.warehouseId = parseInt(warehouseId);
+	// Фильтр по складу
+	if (warehouse) {
+		where.warehouseId = warehouse;
 	}
 
 	// Фильтр по низкому остатку
-	const lowStock = url.searchParams.get('low_stock');
-	if (lowStock === 'true') {
+	if (low_stock) {
 		where.available = {
 			lte: 5,
 			gt: 0
@@ -42,52 +53,50 @@ export const GET: RequestHandler = async ({ url }) => {
 	}
 
 	// Фильтр по максимальному количеству
-	const availableMax = url.searchParams.get('available_max');
-	if (availableMax) {
+	if (available_max !== undefined) {
 		where.available = {
 			...where.available,
-			lte: parseInt(availableMax)
+			lte: available_max
 		};
 	}
 
 	// Фильтр по цене
-	const priceMin = url.searchParams.get('price_min');
-	const priceMax = url.searchParams.get('price_max');
-	if (priceMin || priceMax) {
+	if (price_min !== undefined || price_max !== undefined) {
 		where.priceOpt = {};
-		if (priceMin) {
-			where.priceOpt.gte = parseFloat(priceMin);
+		if (price_min !== undefined) {
+			where.priceOpt.gte = price_min;
 		}
-		if (priceMax) {
-			where.priceOpt.lte = parseFloat(priceMax);
+		if (price_max !== undefined) {
+			where.priceOpt.lte = price_max;
 		}
 	}
 
-		// Build orderBy
-		const orderBy: any = [];
-		if (ordering) {
-			const isDesc = ordering.startsWith('-');
-			const field = isDesc ? ordering.substring(1) : ordering;
-			const direction = isDesc ? 'desc' : 'asc';
-			
-			if (field === 'created_at') {
-				orderBy.push({ createdAt: direction });
-			} else if (field === 'price_opt') {
-				orderBy.push({ priceOpt: direction });
-			} else if (field === 'title') {
-				orderBy.push({ title: direction });
-			}
+	// Build orderBy
+	const orderBy: Prisma.PartOrderByWithRelationInput[] = [];
+	if (ordering) {
+		const isDesc = ordering.startsWith('-');
+		const field = isDesc ? ordering.substring(1) : ordering;
+		const direction = isDesc ? 'desc' : 'asc';
+		
+		if (field === 'created_at') {
+			orderBy.push({ createdAt: direction });
+		} else if (field === 'price_opt') {
+			orderBy.push({ priceOpt: direction });
+		} else if (field === 'title') {
+			orderBy.push({ title: direction });
+		} else if (field === 'available') {
+			orderBy.push({ available: direction });
 		}
+	}
 
-		// Get total count
-		const total = await prisma.part.count({ where });
-
-		// Get parts
-		const parts = await prisma.part.findMany({
+	// Параллельные запросы для оптимизации
+	const [total, parts] = await Promise.all([
+		prisma.part.count({ where }),
+		prisma.part.findMany({
 			where,
-			skip: (page - 1) * pageSize,
-			take: pageSize,
-			orderBy,
+			skip: (page - 1) * page_size,
+			take: page_size,
+			orderBy: orderBy.length > 0 ? orderBy : [{ createdAt: 'desc' }],
 			include: {
 				brand: {
 					select: {
@@ -114,50 +123,54 @@ export const GET: RequestHandler = async ({ url }) => {
 					}
 				}
 			}
-		});
+		})
+	]);
 
-		const results = parts.map(part => ({
-			id: part.id,
-			is_active: part.isActive,
-			title: part.title,
-			label: part.label,
-			original_number: part.originalNumber,
-			manufacturer_number: part.manufacturerNumber,
-			brand: part.brand,
-			brand_name: part.brand?.name || '',
-			warehouse: part.warehouse,
-			warehouse_name: part.warehouse?.name || '',
-			quantity: part.quantity,
-			stock: part.stock,
-			reserve: part.reserve,
-			available: part.available,
-			price_opt: part.priceOpt.toFixed(2),
-			cost_price: part.costPrice.toFixed(2),
-			description: part.description,
-			images: part.images.map(img => ({
-				id: img.id,
-				image_url: img.imageUrl,
-				alt_text: img.altText || part.title,
-				order_index: img.orderIndex
-			})),
-			created_at: part.createdAt.toISOString(),
-			updated_at: part.updatedAt.toISOString()
-		}));
+	const results = parts.map(part => ({
+		id: part.id,
+		is_active: part.isActive,
+		title: part.title,
+		label: part.label,
+		original_number: part.originalNumber,
+		manufacturer_number: part.manufacturerNumber,
+		brand: part.brand,
+		brand_name: part.brand?.name || '',
+		warehouse: part.warehouse,
+		warehouse_name: part.warehouse?.name || '',
+		quantity: part.quantity,
+		stock: part.stock,
+		reserve: part.reserve,
+		available: part.available,
+		price_opt: part.priceOpt.toFixed(2),
+		cost_price: part.costPrice.toFixed(2),
+		description: part.description,
+		images: part.images.map(img => ({
+			id: img.id,
+			image_url: img.imageUrl,
+			alt_text: img.altText || part.title,
+			order_index: img.orderIndex
+		})),
+		created_at: part.createdAt.toISOString(),
+		updated_at: part.updatedAt.toISOString()
+	}));
 
-		const totalPages = Math.ceil(total / pageSize);
+	const totalPages = Math.ceil(total / page_size);
 
-		return json<PaginatedResponse<typeof results[0]>>({
-			count: total,
-			next: page < totalPages ? `/api/parts?page=${page + 1}&page_size=${pageSize}` : null,
-			previous: page > 1 ? `/api/parts?page=${page - 1}&page_size=${pageSize}` : null,
-			results
-		});
-	} catch (error) {
-		console.error('Parts fetch error:', error);
-		return json<ApiResponse>({
-			success: false,
-			error: 'Failed to fetch parts'
-		}, { status: 500 });
-	}
+	logger.info('Parts fetched successfully', { 
+		count: total, 
+		page, 
+		page_size,
+		filters: { search, brand, warehouse, price_min, price_max }
+	});
+
+	return json<PaginatedResponse<typeof results[0]>>({
+		count: total,
+		next: page < totalPages ? `/api/parts?page=${page + 1}&page_size=${page_size}` : null,
+		previous: page > 1 ? `/api/parts?page=${page - 1}&page_size=${page_size}` : null,
+		results
+	});
 };
+
+// Экспорт с обработкой ошибок
+export const GET = createApiHandler(handler, 'GET /api/parts');
 

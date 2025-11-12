@@ -15,13 +15,15 @@
     "prisma:deploy": "prisma migrate deploy",
     "prisma:studio": "prisma studio",
     "db:seed": "node prisma/seed.js",
-    "db:reset": "prisma migrate reset --force && npm run db:seed"
+    "db:reset": "prisma migrate reset --force && npm run db:seed",
+    "import:catalog": "node scripts/import-catalog-csv.js"
   },
   "dependencies": {
     "@prisma/client": "^5.7.0",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
-    "lucide-svelte": "^0.468.0"
+    "lucide-svelte": "^0.468.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@sveltejs/adapter-node": "^4.0.1",

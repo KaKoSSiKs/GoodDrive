@@ -34,19 +34,30 @@ export function initAnalytics(ymCounterId, ga4Id) {
 }
 
 export function trackEvent(category, action, label) {
-  if (typeof window !== 'undefined') {
-    // Yandex.Metrika
-    if (typeof window.ym !== 'undefined' && window.YM_COUNTER_ID) {
-      window.ym(window.YM_COUNTER_ID, 'reachGoal', action, { category, label });
-    }
-    
-    // Google Analytics
-    if (typeof window.gtag !== 'undefined') {
-      window.gtag('event', action, {
-        event_category: category,
-        event_label: label
-      });
-    }
+  if (typeof window === 'undefined') return;
+  
+  // Проверяем согласие на аналитику
+  const savedConsent = localStorage.getItem('cookie_consent');
+  if (!savedConsent) return;
+  
+  try {
+    const consent = JSON.parse(savedConsent);
+    if (!consent.analytics) return;
+  } catch (e) {
+    return;
+  }
+  
+  // Yandex.Metrika
+  if (typeof window.ym !== 'undefined' && window.YM_COUNTER_ID) {
+    window.ym(window.YM_COUNTER_ID, 'reachGoal', action, { category, label });
+  }
+  
+  // Google Analytics
+  if (typeof window.gtag !== 'undefined') {
+    window.gtag('event', action, {
+      event_category: category,
+      event_label: label
+    });
   }
 }
 

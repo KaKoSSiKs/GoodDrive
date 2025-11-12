@@ -3,8 +3,16 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { prisma } from '$lib/server/db';
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async ({ url, locals }) => {
 	try {
+		// Only admin can view analytics
+		if (!locals.user?.isAdmin) {
+			return json({
+				success: false,
+				error: 'Unauthorized'
+			}, { status: 403 });
+		}
+
 		const period = parseInt(url.searchParams.get('period') || '30'); // days
 		const dateFrom = new Date();
 		dateFrom.setDate(dateFrom.getDate() - period);
@@ -26,6 +34,7 @@ export const GET: RequestHandler = async ({ url }) => {
 			total: allOrders.length,
 			new: allOrders.filter((o) => o.status === 'new').length,
 			processing: allOrders.filter((o) => o.status === 'processing').length,
+			shipped: allOrders.filter((o) => o.status === 'shipped').length,
 			completed: allOrders.filter((o) => o.status === 'completed').length,
 			canceled: allOrders.filter((o) => o.status === 'canceled').length
 		};
@@ -58,6 +67,7 @@ export const GET: RequestHandler = async ({ url }) => {
 			total: byStatus.total,
 			new: byStatus.new,
 			processing: byStatus.processing,
+			shipped: byStatus.shipped,
 			completed: byStatus.completed,
 			canceled: byStatus.canceled,
 			lastWeek: lastWeekOrders.length,

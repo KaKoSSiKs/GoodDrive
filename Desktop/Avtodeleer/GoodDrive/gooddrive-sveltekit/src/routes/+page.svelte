@@ -96,47 +96,40 @@
 />
 
 <!-- Hero секция -->
-<section class="relative bg-gradient-to-br from-dark-800 via-dark-900 to-black text-white overflow-hidden" style="min-height: 70vh;">
+<section class="relative bg-gradient-to-br from-gray-50 via-white to-gray-100 overflow-hidden" style="min-height: 60vh;">
   <!-- Декоративные элементы -->
   {#if !heroImageFailed}
     <img
       src="/images/img_car.jpg"
-      alt="Быстрая доставка автозапчастей"
-      class="absolute inset-0 w-full h-full object-cover object-center opacity-30"
+      alt="Быстрая доставка автозапчастей по всей России"
+      class="absolute inset-0 w-full h-full object-cover object-center opacity-10"
+      loading="eager"
+      decoding="async"
+      width="1920"
+      height="1080"
       onerror={() => heroImageFailed = true}
+      role="img"
+      aria-hidden="true"
     />
   {/if}
-  <div class="absolute inset-0 bg-gradient-to-br from-primary-900/60 via-brand-900/40 to-black/60"></div>
-  <div class="absolute top-0 left-0 w-full h-full">
-    <div class="absolute top-20 left-10 w-72 h-72 bg-primary-500/20 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-20 right-10 w-96 h-96 bg-brand-600/20 rounded-full blur-3xl"></div>
-  </div>
   
-  <div class="relative container-custom py-20 lg:py-28">
-    <div class="max-w-5xl mx-auto text-center">
-      <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-        <span class="bg-gradient-to-r from-primary-200 via-primary-100 to-white bg-clip-text text-transparent">
-          Автозапчасти
-        </span>
+  <div class="relative container-custom py-16 lg:py-24">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight text-gray-900">
+        Автозапчасти
         <br>
-        <span class="text-white drop-shadow-lg">для вашего автомобиля</span>
+        <span class="text-primary-700">для вашего автомобиля</span>
       </h1>
-      <p class="text-xl md:text-2xl mb-12 text-gray-200 max-w-3xl mx-auto leading-relaxed">
+      <p class="text-lg md:text-xl mb-10 text-gray-800 max-w-2xl mx-auto leading-relaxed">
         Широкий выбор оригинальных и совместимых запчастей от ведущих производителей. 
         Быстрая доставка по всей России. Консультации специалистов.
       </p>
-      <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
-        <a href="/catalog" class="btn-primary text-lg px-10 py-4 shadow-2xl">
-          <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <a href="/catalog" class="btn-primary text-lg px-8 py-3">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           Перейти в каталог
-        </a>
-        <a href="/#contacts" class="btn-outline text-lg px-10 py-4 shadow-xl border-white/30 text-white hover:bg-white/10">
-          <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-          </svg>
-          Связаться с нами
         </a>
       </div>
     </div>
@@ -146,45 +139,45 @@
 <!-- Категории товаров -->
 <section class="section-padding bg-white">
   <div class="container-custom">
-    <h2 class="text-4xl font-bold text-dark-500 mb-12 text-center">Категории запчастей</h2>
+    <h2 class="text-3xl font-semibold text-gray-900 mb-10 text-center">Категории запчастей</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      <a href="/catalog?search=датчик%20модуль%20электроника" class="card group hover:border-primary-500 hover:shadow-xl transition-all duration-300">
+      <a href="/catalog?search=датчик%20модуль%20электроника" class="card group hover:border-primary-300 hover:shadow-lg transition-all duration-200">
         <div class="p-6 text-center">
-          <div class="w-20 h-20 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-600 group-hover:scale-110 transition-all shadow-md">
-            <img src="/icons/electronics_ic.png" alt="Электроника" class="w-12 h-12 object-contain icon-primary" />
+          <div class="w-16 h-16 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-50 transition-colors">
+            <img src="/icons/electronics_ic.png" alt="Электроника" class="w-10 h-10 object-contain icon-primary" />
           </div>
-          <h3 class="font-bold text-dark-800 mb-2 text-lg">Электроника</h3>
-          <p class="text-sm text-gray-600">Датчики, модули, провода</p>
+          <h3 class="font-semibold text-gray-900 mb-2">Электроника</h3>
+          <p class="text-sm text-gray-700">Датчики, модули, провода</p>
         </div>
       </a>
       
-      <a href="/catalog?search=двигатель%20фильтр%20масло%20ремень" class="card group hover:border-primary-500 hover:shadow-xl transition-all duration-300">
+      <a href="/catalog?search=двигатель%20фильтр%20масло%20ремень" class="card group hover:border-primary-300 hover:shadow-lg transition-all duration-200">
         <div class="p-6 text-center">
-          <div class="w-20 h-20 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-600 group-hover:scale-110 transition-all shadow-md">
-            <img src="/icons/engine_ic.png" alt="Двигатель" class="w-12 h-12 object-contain icon-primary" />
+          <div class="w-16 h-16 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-50 transition-colors">
+            <img src="/icons/engine_ic.png" alt="Двигатель" class="w-10 h-10 object-contain icon-primary" />
           </div>
-          <h3 class="font-bold text-dark-800 mb-2 text-lg">Двигатель</h3>
-          <p class="text-sm text-gray-600">Фильтры, масла, ремни</p>
+          <h3 class="font-semibold text-gray-900 mb-2">Двигатель</h3>
+          <p class="text-sm text-gray-700">Фильтры, масла, ремни</p>
         </div>
       </a>
       
-      <a href="/catalog?search=подвеска%20стойка%20амортизатор" class="card group hover:border-primary-500 hover:shadow-xl transition-all duration-300">
+      <a href="/catalog?search=подвеска%20стойка%20амортизатор" class="card group hover:border-primary-300 hover:shadow-lg transition-all duration-200">
         <div class="p-6 text-center">
-          <div class="w-20 h-20 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-600 group-hover:scale-110 transition-all shadow-md">
-            <img src="/icons/suspension_ic.png" alt="Подвеска" class="w-12 h-12 object-contain icon-primary" />
+          <div class="w-16 h-16 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-50 transition-colors">
+            <img src="/icons/suspension_ic.png" alt="Подвеска" class="w-10 h-10 object-contain icon-primary" />
           </div>
-          <h3 class="font-bold text-dark-800 mb-2 text-lg">Подвеска</h3>
-          <p class="text-sm text-gray-600">Стойки, амортизаторы, пружины</p>
+          <h3 class="font-semibold text-gray-900 mb-2">Подвеска</h3>
+          <p class="text-sm text-gray-700">Стойки, амортизаторы, пружины</p>
         </div>
       </a>
       
-      <a href="/catalog?search=тормоз%20колодки%20диск" class="card group hover:border-primary-500 hover:shadow-xl transition-all duration-300">
+      <a href="/catalog?search=тормоз%20колодки%20диск" class="card group hover:border-primary-300 hover:shadow-lg transition-all duration-200">
         <div class="p-6 text-center">
-          <div class="w-20 h-20 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-600 group-hover:scale-110 transition-all shadow-md">
-            <img src="/icons/brake_ic.png" alt="Тормоза" class="w-12 h-12 object-contain icon-primary" />
+          <div class="w-16 h-16 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-50 transition-colors">
+            <img src="/icons/brake_ic.png" alt="Тормоза" class="w-10 h-10 object-contain icon-primary" />
           </div>
-          <h3 class="font-bold text-dark-800 mb-2 text-lg">Тормоза</h3>
-          <p class="text-sm text-gray-600">Колодки, диски, суппорты</p>
+          <h3 class="font-semibold text-gray-900 mb-2">Тормоза</h3>
+          <p class="text-sm text-gray-700">Колодки, диски, суппорты</p>
         </div>
       </a>
     </div>
@@ -194,10 +187,10 @@
 <!-- Популярные товары -->
 <section class="section-padding bg-gray-50">
   <div class="container-custom">
-    <div class="flex items-center justify-between mb-12">
+    <div class="flex items-center justify-between mb-10">
       <div>
-        <h2 class="text-4xl font-bold text-dark-500 mb-2">Популярные товары</h2>
-        <p class="text-gray-600">Выбирают большинство покупателей</p>
+        <h2 class="text-3xl font-semibold text-gray-900 mb-2">Популярные товары</h2>
+        <p class="text-gray-800">Выбирают большинство покупателей</p>
       </div>
       <a href="/catalog" class="btn-outline">
         Смотреть все
@@ -228,22 +221,22 @@
 </section>
 
 <!-- Онлайн-помощь специалиста -->
-<section class="section-padding bg-gradient-to-br from-brand-800 via-primary-800 to-brand-900 text-white">
+<section class="section-padding bg-gray-900">
   <div class="container-custom">
     <div class="max-w-4xl mx-auto">
-      <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold mb-4">Онлайн-помощь специалиста</h2>
-        <p class="text-xl text-gray-300">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-bold mb-3 text-white">Онлайн-помощь специалиста</h2>
+        <p class="text-lg text-gray-200">
           Более 10 специалистов прямо сейчас готовы вас проконсультировать
         </p>
-        <p class="text-sm text-gray-400 mt-2">
+        <p class="text-sm text-gray-300 mt-2">
           Примерное время ожидания ответа на Ваш запрос 3-10 минут
         </p>
       </div>
 
-      <form onsubmit={handleConsultationSubmit} class="card bg-white/10 backdrop-blur-sm p-8">
+      <form onsubmit={handleConsultationSubmit} class="bg-gray-800 rounded-xl border border-gray-700 p-8">
         <div class="mb-6">
-          <label for="consultation-vin" class="block text-sm font-medium text-gray-300 mb-2">
+          <label for="consultation-vin" class="block text-sm font-medium text-gray-200 mb-2">
             VIN-код вашего автомобиля
           </label>
           <input
@@ -251,14 +244,14 @@
             type="text"
             bind:value={consultationForm.vin}
             placeholder="Например: WVWZZZ1KZAW123456"
-            class="input bg-white/20 border-white/30 text-white placeholder-gray-400 focus:border-white focus:ring-white/50"
+            class="block w-full px-4 py-3 border-2 border-gray-600 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-gray-700 text-white hover:border-gray-500"
             required
           />
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
-            <label for="consultation-name" class="block text-sm font-medium text-gray-300 mb-2">
+            <label for="consultation-name" class="block text-sm font-medium text-gray-200 mb-2">
               Ваше имя
             </label>
             <input
@@ -266,12 +259,12 @@
               type="text"
               bind:value={consultationForm.name}
               placeholder="Иван"
-              class="input bg-white/20 border-white/30 text-white placeholder-gray-400 focus:border-white focus:ring-white/50"
+              class="block w-full px-4 py-3 border-2 border-gray-600 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-gray-700 text-white hover:border-gray-500"
               required
             />
           </div>
           <div>
-            <label for="consultation-phone" class="block text-sm font-medium text-gray-300 mb-2">
+            <label for="consultation-phone" class="block text-sm font-medium text-gray-200 mb-2">
               Телефон
             </label>
             <input
@@ -279,7 +272,7 @@
               type="tel"
               bind:value={consultationForm.phone}
               placeholder="+7 (999) 123-45-67"
-              class="input bg-white/20 border-white/30 text-white placeholder-gray-400 focus:border-white focus:ring-white/50"
+              class="block w-full px-4 py-3 border-2 border-gray-600 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-gray-700 text-white hover:border-gray-500"
               required
             />
           </div>
@@ -299,9 +292,9 @@
 <!-- Контакты и карта -->
 <section id="contacts" class="section-padding bg-white">
   <div class="container-custom">
-    <div class="text-center mb-12">
-      <h2 class="text-4xl font-bold text-dark-500 mb-4">Контакты</h2>
-      <p class="text-xl text-gray-600">Приезжайте к нам или свяжитесь удобным способом</p>
+    <div class="text-center mb-10">
+      <h2 class="text-3xl font-semibold text-gray-900 mb-3">Контакты</h2>
+      <p class="text-lg text-gray-800">Приезжайте к нам или свяжитесь удобным способом</p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -310,17 +303,17 @@
         <div class="card p-6">
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0">
-              <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
-                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
               </div>
             </div>
             <div class="flex-1">
-              <h3 class="text-lg font-bold text-dark-500 mb-2">Адрес магазина</h3>
-              <p class="text-gray-600">г. Челябинск</p>
-              <p class="text-gray-600">ул. Артиллерийская, дом 15, корпус 2</p>
+              <h3 class="text-base font-semibold text-gray-900 mb-2">Адрес магазина</h3>
+              <p class="text-gray-800 text-sm">г. Челябинск</p>
+              <p class="text-gray-800 text-sm">ул. Артиллерийская, дом 15, корпус 2</p>
             </div>
           </div>
         </div>
@@ -328,15 +321,15 @@
         <div class="card p-6">
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0">
-              <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
-                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
               </div>
             </div>
             <div class="flex-1">
-              <h3 class="text-lg font-bold text-dark-500 mb-2">Телефон</h3>
-              <a href="tel:+79227081553" class="text-primary-600 hover:text-primary-700 font-medium">+7 (922) 708-15-53</a>
+              <h3 class="text-base font-semibold text-gray-900 mb-2">Телефон</h3>
+              <a href="tel:+79227081553" class="text-primary-700 hover:text-primary-800 font-medium text-sm">+7 (922) 708-15-53</a>
             </div>
           </div>
         </div>
@@ -344,17 +337,17 @@
         <div class="card p-6">
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0">
-              <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
-                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
             </div>
             <div class="flex-1">
-              <h3 class="text-lg font-bold text-dark-500 mb-2">Время работы</h3>
-              <p class="text-gray-600">Пн-Пт: 09:00 - 18:00</p>
-              <p class="text-gray-600">Сб: 10:00 - 16:00</p>
-              <p class="text-red-600 font-medium">Вс: Выходной</p>
+              <h3 class="text-base font-semibold text-gray-900 mb-2">Время работы</h3>
+              <p class="text-gray-800 text-sm">Пн-Пт: 09:00 - 18:00</p>
+              <p class="text-gray-800 text-sm">Сб: 10:00 - 16:00</p>
+              <p class="text-gray-700 font-medium text-sm">Вс: Выходной</p>
             </div>
           </div>
         </div>
@@ -362,15 +355,15 @@
         <div class="card p-6">
           <div class="flex items-start space-x-4">
             <div class="flex-shrink-0">
-              <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
-                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
             </div>
             <div class="flex-1">
-              <h3 class="text-lg font-bold text-dark-500 mb-2">Email</h3>
-              <a href="mailto:89227081553@mail.ru" class="text-primary-600 hover:text-primary-700 font-medium">89227081553@mail.ru</a>
+              <h3 class="text-base font-semibold text-gray-900 mb-2">Email</h3>
+              <a href="mailto:89227081553@mail.ru" class="text-primary-700 hover:text-primary-800 font-medium text-sm">89227081553@mail.ru</a>
             </div>
           </div>
         </div>
@@ -398,9 +391,9 @@
 <section class="section-padding bg-white">
   <div class="container-custom">
     <div class="max-w-4xl mx-auto">
-      <div class="text-center mb-12">
-        <h2 class="text-4xl font-bold text-dark-500 mb-4">Подбор по автомобилю</h2>
-        <p class="text-xl text-gray-600">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-semibold text-gray-900 mb-3">Подбор по автомобилю</h2>
+        <p class="text-lg text-gray-800">
           Найдите запчасти для вашего автомобиля за несколько минут
         </p>
       </div>
@@ -468,47 +461,47 @@
 <section class="section-padding bg-gradient-to-br from-gray-50 to-white">
   <div class="container-custom">
     <div class="max-w-7xl mx-auto">
-      <div class="text-center mb-16">
-        <h2 class="text-4xl font-bold text-dark-500 mb-4">Почему выбирают нас</h2>
-        <p class="text-xl text-gray-600">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-semibold text-gray-900 mb-3">Почему выбирают нас</h2>
+        <p class="text-lg text-gray-800">
           Мы работаем, чтобы вы были довольны
         </p>
       </div>
 
       <!-- Статистика -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="card p-8 text-center group hover:border-primary-500 hover:shadow-2xl transition-all">
-          <div class="w-20 h-20 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-600 group-hover:scale-110 transition-all shadow-md">
-            <svg class="w-10 h-10 text-primary-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="card p-6 text-center group hover:border-primary-300 hover:shadow-lg transition-all">
+          <div class="w-16 h-16 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-50 transition-colors">
+            <svg class="w-8 h-8 text-primary-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h3 class="font-bold text-dark-800 mb-3 text-2xl">Доступные цены</h3>
-          <p class="text-gray-600">
+          <h3 class="font-semibold text-gray-900 mb-2 text-xl">Доступные цены</h3>
+          <p class="text-gray-800 text-sm">
             Конкурентные цены на весь ассортимент. Работаем напрямую с поставщиками
           </p>
         </div>
 
-        <div class="card p-8 text-center group hover:border-primary-500 hover:shadow-2xl transition-all">
-          <div class="w-20 h-20 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-600 group-hover:scale-110 transition-all shadow-md">
-            <svg class="w-10 h-10 text-primary-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="card p-6 text-center group hover:border-primary-300 hover:shadow-lg transition-all">
+          <div class="w-16 h-16 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-50 transition-colors">
+            <svg class="w-8 h-8 text-primary-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
-          <h3 class="font-bold text-dark-800 mb-3 text-2xl">Быстрая доставка</h3>
-          <p class="text-gray-600">
+          <h3 class="font-semibold text-gray-900 mb-2 text-xl">Быстрая доставка</h3>
+          <p class="text-gray-800 text-sm">
             Доставляем заказы в кратчайшие сроки по всей России
           </p>
         </div>
 
-        <div class="card p-8 text-center group hover:border-primary-500 hover:shadow-2xl transition-all">
-          <div class="w-20 h-20 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-600 group-hover:scale-110 transition-all shadow-md">
-            <svg class="w-10 h-10 text-primary-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="card p-6 text-center group hover:border-primary-300 hover:shadow-lg transition-all">
+          <div class="w-16 h-16 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-50 transition-colors">
+            <svg class="w-8 h-8 text-primary-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>
-          <h3 class="font-bold text-dark-800 mb-3 text-2xl">Гарантия качества</h3>
-          <p class="text-gray-600">
+          <h3 class="font-semibold text-gray-900 mb-2 text-xl">Гарантия качества</h3>
+          <p class="text-gray-800 text-sm">
             Все товары сертифицированы и проходят проверку качества
           </p>
         </div>
@@ -520,9 +513,9 @@
 <!-- Отзывы клиентов с Яндекс.Карт -->
 <section class="section-padding bg-gray-50">
   <div class="container-custom">
-    <div class="text-center mb-12">
-      <h2 class="text-4xl font-bold text-dark-500 mb-4">Отзывы наших клиентов</h2>
-      <p class="text-xl text-gray-600">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl font-semibold text-gray-900 mb-3">Отзывы наших клиентов</h2>
+      <p class="text-lg text-gray-800">
         Нам доверяют тысячи автовладельцев
       </p>
     </div>

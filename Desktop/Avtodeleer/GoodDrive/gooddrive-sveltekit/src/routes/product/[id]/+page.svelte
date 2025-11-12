@@ -165,17 +165,25 @@
 		<!-- Левая колонка: Галерея изображений -->
 		<div class="space-y-4">
 			<!-- Основное изображение -->
-			<div class="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl overflow-hidden shadow-lg border border-gray-200">
+			<div class="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl overflow-hidden shadow-lg border border-gray-200" role="img" aria-label="Изображение товара {part.title}">
 				{#if hasImages && currentImage}
 					<img
 						src={currentImage.image_url}
-						alt={currentImage.alt_text || part.title}
-						class="w-full h-full object-contain p-4"
+						alt={currentImage.alt_text || `${part.title}${brandName ? ` от ${brandName}` : ''}`}
+						class="w-full h-full object-contain p-4 transition-opacity duration-300"
+						loading={selectedImageIndex === 0 ? 'eager' : 'lazy'}
+						decoding="async"
+						width="800"
+						height="800"
+						onerror={(e) => {
+							console.error('Image load error:', currentImage.image_url);
+							e.currentTarget.style.display = 'none';
+						}}
 					/>
 				{:else}
-					<div class="w-full h-full flex items-center justify-center">
+					<div class="w-full h-full flex items-center justify-center" role="img" aria-label="Изображение товара отсутствует">
 						<div class="text-center">
-							<svg class="w-32 h-32 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<svg class="w-32 h-32 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
 							</svg>
 							<p class="text-gray-400 font-medium">Изображение отсутствует</p>
@@ -186,17 +194,27 @@
 
 			<!-- Миниатюры -->
 			{#if part.images && part.images.length > 1}
-				<div class="grid grid-cols-4 gap-3">
+				<div class="grid grid-cols-4 gap-3" role="group" aria-label="Миниатюры изображений товара">
 					{#each part.images as image, index}
 						<button
 							onclick={() => selectImage(index)}
+							aria-label="Показать изображение {index + 1} из {part.images.length}: {image.alt_text || part.title}"
+							aria-pressed={selectedImageIndex === index}
 							class="aspect-square bg-gray-50 rounded-xl overflow-hidden border-2 transition-all duration-200
 								   {selectedImageIndex === index ? 'border-primary-500 ring-2 ring-primary-200' : 'border-gray-200 hover:border-primary-300'}"
 						>
 							<img
 								src={image.image_url}
-								alt={image.alt_text || part.title}
+								alt={image.alt_text || `${part.title} - изображение ${index + 1}`}
 								class="w-full h-full object-contain p-2"
+								loading="lazy"
+								decoding="async"
+								width="200"
+								height="200"
+								onerror={(e) => {
+									console.error('Thumbnail load error:', image.image_url);
+									e.currentTarget.style.display = 'none';
+								}}
 							/>
 						</button>
 					{/each}

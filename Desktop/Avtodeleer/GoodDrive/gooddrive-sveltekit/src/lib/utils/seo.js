@@ -50,27 +50,35 @@ export function generateProductJsonLd(product) {
  * Генерирует JSON-LD разметку для организации
  */
 export function generateOrganizationJsonLd() {
+  // Используем environment variable для base URL
+  // В browser это будет доступно через $env/static/public
+  const baseUrl = typeof window !== 'undefined' 
+    ? window.location.origin 
+    : (process.env.PUBLIC_SITE_URL || 'https://gooddrive.com');
+  
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "GoodDrive",
     "description": "Интернет-магазин автозапчастей",
-    "url": "https://gooddrive.com",
-    "logo": "https://gooddrive.com/logo.png",
+    "url": baseUrl,
+    "logo": `${baseUrl}/logo.png`,
     "contactPoint": {
       "@type": "ContactPoint",
-      "telephone": "+7 (XXX) XXX-XX-XX",
+      "telephone": "+7 (922) 708-15-53",
       "contactType": "customer service",
       "availableLanguage": "Russian"
     },
     "address": {
       "@type": "PostalAddress",
       "addressCountry": "RU",
-      "addressLocality": "Москва"
+      "addressLocality": "Челябинск",
+      "streetAddress": "ул. Артиллерийская, дом 15, корпус 2"
     },
     "sameAs": [
-      "https://vk.com/gooddrive",
-      "https://t.me/gooddrive"
+      // Добавьте реальные ссылки на социальные сети когда будут готовы
+      // "https://vk.com/gooddrive",
+      // "https://t.me/gooddrive"
     ]
   };
 }

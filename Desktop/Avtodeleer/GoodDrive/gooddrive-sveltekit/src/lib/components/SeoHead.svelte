@@ -31,7 +31,11 @@
   
   // Обновление метатегов при изменении пропсов
   $effect(() => {
-    const baseUrl = 'https://gooddrive.com';
+    // Используем browser location для определения base URL
+    // В SSR это будет доступно через $env/static/public
+    const baseUrl = typeof window !== 'undefined' 
+      ? window.location.origin 
+      : (import.meta.env.PUBLIC_SITE_URL || 'https://gooddrive.com');
     const currentUrl = `${baseUrl}${$page.url.pathname}`;
     
     canonicalUrl = generateCanonicalUrl(baseUrl, $page.url.pathname);

@@ -17,7 +17,8 @@
     delivery_address: '',
     delivery_city: '',
     delivery_postal_code: '',
-    notes: ''
+    notes: '',
+    consent_pd: false
   });
   
   // Ошибки валидации
@@ -68,6 +69,12 @@
     // Город
     if (!form.delivery_city.trim()) {
       errors.delivery_city = 'Введите город';
+      isValid = false;
+    }
+    
+    // Согласие на обработку ПД
+    if (!form.consent_pd) {
+      errors.consent_pd = 'Необходимо дать согласие на обработку персональных данных';
       isValid = false;
     }
     
@@ -337,6 +344,28 @@
                   placeholder="Дополнительная информация о заказе..."
                 ></textarea>
               </div>
+            </div>
+            
+            <!-- Согласие на обработку персональных данных -->
+            <div class="card p-6">
+              <div class="flex items-start space-x-3">
+                <input
+                  type="checkbox"
+                  id="consent_pd"
+                  bind:checked={form.consent_pd}
+                  class="mt-1 w-5 h-5 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                />
+                <label for="consent_pd" class="text-sm text-neutral-700">
+                  Я даю согласие на обработку моих персональных данных в соответствии с 
+                  <a href="/privacy" target="_blank" class="text-primary-600 hover:underline">Политикой конфиденциальности</a> 
+                  и принимаю условия 
+                  <a href="/terms" target="_blank" class="text-primary-600 hover:underline">Пользовательского соглашения</a>.
+                  <span class="text-red-500">*</span>
+                </label>
+              </div>
+              {#if errors.consent_pd}
+                <p class="text-red-500 text-sm mt-2 ml-8">{errors.consent_pd}</p>
+              {/if}
             </div>
             
             <!-- Общая ошибка -->

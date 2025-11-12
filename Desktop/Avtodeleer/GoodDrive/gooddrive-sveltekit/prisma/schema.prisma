@@ -2,7 +2,8 @@
 // Миграция с Django PostgreSQL на MySQL
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex"]
 }
 
 datasource db {
@@ -84,11 +85,27 @@ model Part {
   images     PartImage[]
   orderItems OrderItem[]
 
+  // Индексы для оптимизации запросов
+  // Составной индекс для фильтрации по бренду и активности
   @@index([brandId, isActive])
+  // Составной индекс для фильтрации по складу и активности
   @@index([warehouseId, isActive])
+  // Индекс для фильтрации по цене
   @@index([priceOpt])
+  // Индекс для фильтрации по наличию
   @@index([available])
+  // Индекс для сортировки по дате создания
   @@index([createdAt])
+  // Индекс для сортировки по дате обновления
+  @@index([updatedAt])
+  // Составной индекс для поиска активных товаров с наличием
+  @@index([isActive, available])
+  // Составной индекс для фильтрации по бренду, активности и наличию
+  @@index([brandId, isActive, available])
+  // Полнотекстовый индекс для поиска (MySQL)
+  // Примечание: MySQL FULLTEXT требует MyISAM или InnoDB с версии 5.6+
+  // Для MySQL 5.7+ можно использовать полнотекстовый индекс
+  @@fulltext([title, originalNumber, manufacturerNumber])
   @@map("catalog_parts")
 }
 
@@ -103,8 +120,13 @@ model PartImage {
   // Relations
   part Part @relation(fields: [partId], references: [id], onDelete: Cascade)
 
+  // Индексы для оптимизации запросов
+  // Индекс для поиска изображений товара
   @@index([partId])
+  // Индекс для сортировки по порядку
   @@index([orderIndex])
+  // Составной индекс для получения изображений товара в правильном порядке
+  @@index([partId, orderIndex])
   @@map("catalog_part_images")
 }
 

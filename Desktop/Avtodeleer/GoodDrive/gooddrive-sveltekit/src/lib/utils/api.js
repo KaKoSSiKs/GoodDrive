@@ -18,6 +18,7 @@ class ApiClient {
         'Content-Type': 'application/json',
         ...options.headers,
       },
+      credentials: 'same-origin', // Включаем отправку cookies
       ...options,
     };
     
@@ -25,7 +26,24 @@ class ApiClient {
       const response = await fetch(url, config);
       
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // Пытаемся получить детальную информацию об ошибке
+        let errorMessage = `HTTP error! status: ${response.status}`;
+        try {
+          const errorData = await response.json();
+          if (errorData.error) {
+            errorMessage = errorData.error;
+          }
+        } catch (e) {
+          // Если не удалось распарсить JSON, используем стандартное сообщение
+        }
+        
+        // Специальная обработка ошибок авторизации
+        if (response.status === 403 || response.status === 401) {
+          console.error('Authentication error:', errorMessage);
+          // Можно добавить редирект на страницу логина если нужно
+        }
+        
+        throw new Error(errorMessage);
       }
       
       return await response.json();

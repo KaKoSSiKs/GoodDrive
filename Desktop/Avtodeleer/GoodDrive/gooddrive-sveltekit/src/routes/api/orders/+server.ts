@@ -18,19 +18,65 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 		const page = parseInt(url.searchParams.get('page') || '1');
 		const pageSize = parseInt(url.searchParams.get('page_size') || '20');
 		const status = url.searchParams.get('status');
+		const search = url.searchParams.get('search');
+		const createdAfter = url.searchParams.get('created_after');
+		const createdBefore = url.searchParams.get('created_before');
+		const ordering = url.searchParams.get('ordering') || '-created_at';
 
 		const where: any = {};
 		if (status) {
 			where.status = status;
 		}
 
+		// Фильтр по датам
+		if (createdAfter || createdBefore) {
+			where.createdAt = {};
+			if (createdAfter) {
+				// Начало дня
+				const dateFrom = new Date(createdAfter);
+				dateFrom.setHours(0, 0, 0, 0);
+				where.createdAt.gte = dateFrom;
+			}
+			if (createdBefore) {
+				// Конец дня
+				const dateTo = new Date(createdBefore);
+				dateTo.setHours(23, 59, 59, 999);
+				where.createdAt.lte = dateTo;
+			}
+		}
+
+		// Поиск по номеру заказа, имени клиента, телефону или email
+		if (search) {
+			where.OR = [
+				{ orderNumber: { contains: search, mode: 'insensitive' } },
+				{ customerName: { contains: search, mode: 'insensitive' } },
+				{ customerPhone: { contains: search, mode: 'insensitive' } },
+				{ customerEmail: { contains: search, mode: 'insensitive' } }
+			];
+		}
+
 		const total = await prisma.order.count({ where });
+
+		// Определяем порядок сортировки
+		let orderBy: any = { createdAt: 'desc' };
+		if (ordering) {
+			const orderField = ordering.startsWith('-') ? ordering.slice(1) : ordering;
+			const orderDirection = ordering.startsWith('-') ? 'desc' : 'asc';
+			
+			if (orderField === 'created_at') {
+				orderBy = { createdAt: orderDirection };
+			} else if (orderField === 'total_amount') {
+				orderBy = { totalAmount: orderDirection };
+			} else if (orderField === 'status') {
+				orderBy = { status: orderDirection };
+			}
+		}
 
 		const orders = await prisma.order.findMany({
 			where,
 			skip: (page - 1) * pageSize,
 			take: pageSize,
-			orderBy: { createdAt: 'desc' },
+			orderBy,
 			include: {
 				items: {
 					include: {
