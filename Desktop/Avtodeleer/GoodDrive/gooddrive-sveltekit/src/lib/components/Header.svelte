@@ -53,15 +53,15 @@
     <div class="flex items-center justify-between h-16">
       <!-- Логотип -->
       <div class="flex items-center">
-        <a href="/" class="flex items-center space-x-3" aria-label="GoodDrive">
+        <a href="/" class="flex items-center space-x-3 group" aria-label="GoodDrive">
           {#if !logoLoadFailed}
-            <img src="/images/logo.jpg" alt="GoodDrive" class="h-12 w-auto" onerror={() => logoLoadFailed = true} />
+            <img src="/images/logo.jpg" alt="GoodDrive" class="h-12 w-auto group-hover:scale-105 transition-transform" onerror={() => logoLoadFailed = true} />
           {:else}
-            <div class="w-12 h-12 bg-primary-500 rounded-lg flex items-center justify-center">
+            <div class="w-12 h-12 bg-gradient-to-br from-primary-600 to-brand-700 rounded-xl flex items-center justify-center shadow-md">
               <span class="text-white font-bold text-2xl">G</span>
             </div>
           {/if}
-          <span class="text-2xl font-bold text-neutral-900">GoodDrive</span>
+          <span class="text-2xl font-bold bg-gradient-to-r from-primary-700 to-brand-700 bg-clip-text text-transparent">GoodDrive</span>
         </a>
       </div>
       
@@ -93,10 +93,10 @@
         </nav>
         
         <!-- Корзина -->
-        <a href="/cart" class="relative p-2 text-neutral-700 hover:text-primary-500 transition-colors" aria-label="Корзина">
+        <a href="/cart" class="relative p-2 text-neutral-700 hover:text-primary-600 transition-all hover:scale-110" aria-label="Корзина">
           <img src="/icons/shoping_cart.png" alt="Корзина" class="h-6 w-6" />
           {#if cartItemsCount > 0}
-            <span class="absolute -top-1 -right-1 bg-primary-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            <span class="absolute -top-1 -right-1 bg-gradient-to-br from-primary-500 to-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold shadow-lg">
               {cartItemsCount}
             </span>
           {/if}

@@ -45,10 +45,10 @@
   <div class="max-w-md w-full">
     <!-- Логотип -->
     <div class="text-center mb-8">
-      <div class="w-16 h-16 bg-primary-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+      <div class="w-16 h-16 bg-gradient-to-br from-primary-600 to-brand-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl">
         <span class="text-white font-bold text-3xl">A</span>
       </div>
-      <h1 class="text-3xl font-bold text-white mb-2">Admin Panel</h1>
+      <h1 class="text-3xl font-bold bg-gradient-to-r from-primary-400 to-primary-200 bg-clip-text text-transparent mb-2">Admin Panel</h1>
       <p class="text-gray-400">GoodDrive</p>
     </div>
     

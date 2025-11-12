@@ -42,10 +42,10 @@
       <!-- Информация о компании -->
       <div class="lg:col-span-1">
         <div class="flex items-center space-x-2 mb-4">
-          <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
+          <div class="w-8 h-8 bg-gradient-to-br from-primary-600 to-brand-700 rounded-lg flex items-center justify-center shadow-md">
             <span class="text-white font-bold text-lg">G</span>
           </div>
-          <span class="text-xl font-bold">GoodDrive</span>
+          <span class="text-xl font-bold bg-gradient-to-r from-primary-400 to-primary-300 bg-clip-text text-transparent">GoodDrive</span>
         </div>
         <p class="text-neutral-300 mb-4">
           Интернет-магазин автозапчастей с широким ассортиментом и быстрой доставкой.
@@ -103,7 +103,7 @@
             {#each socialLinks as social}
               <a 
                 href={social.href}
-                class="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-primary-500 transition-colors"
+                class="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-gradient-to-br hover:from-primary-600 hover:to-brand-700 transition-all hover:scale-110 hover:shadow-lg"
                 title={social.name}
               >
                 {#if social.icon === 'telegram'}
@@ -133,7 +133,7 @@
               placeholder="Ваш email" 
               class="px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-l-lg text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
-            <button class="px-4 py-2 bg-primary-500 text-white rounded-r-lg hover:bg-primary-600 transition-colors">
+            <button class="px-4 py-2 bg-gradient-to-r from-primary-600 to-brand-700 text-white rounded-r-lg hover:from-primary-700 hover:to-brand-800 transition-all hover:shadow-lg">
               Подписаться
             </button>
           </div>

@@ -1,0 +1,128 @@
+# Gradle
+.gradle/
+.m2/
+
+# Android
+.android/
+AndroidStudioProjects/
+StudioProjects/
+
+# Node.js
+node_modules/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+.cursor/
+
+# System files
+.cache/
+.config/
+.local/
+.dbus-keyrings/
+.docker/
+.ssh/
+.matplotlib/
+.mobisystems/
+.openjfx/
+.skiko/
+
+# User directories
+3D Objects/
+Documents/
+Downloads/
+Pictures/
+Music/
+Videos/
+Contacts/
+Favorites/
+Links/
+Searches/
+OneDrive/
+OneDrive - РАНХиГС/
+YandexDisk/
+YandexDisk-fotiniy.sun1974/
+MicrosoftEdgeBackups/
+AppData/
+
+# Desktop files (except Avtodeleer/GoodDrive)
+Desktop/DFD/
+Desktop/Marketing/
+Desktop/New album/
+Desktop/Practika/
+Desktop/Vision1.mp4
+Desktop/GoodDrive.mp4
+Desktop/android_T-bank/
+Desktop/autodealer/
+Desktop/desktop.ini
+Desktop/develop/
+Desktop/pasmr/
+Desktop/yacht-rent/
+Desktop/Сайт/
+Desktop/Универ/
+Desktop/Школьные годы/
+Desktop/ЯРик/
+Desktop/документы/
+Desktop/Лабы гуу/
+Desktop/*.pdf
+Desktop/*.docx
+Desktop/*.xlsx
+Desktop/*.lnk
+
+# Root level files/folders
+Архиповы_NAVWEB/
+Если
+Порт
+Семейное дерево Архипов 270722.gpkg.media/
+Файл
+Чтобы
+ntuser.ini
+.idlerc/
+
+# Projects (except Desktop/Avtodeleer/GoodDrive)
+Projects/
+PycharmProjects/
+client/
+dubai-real-estate/
+new-project/
+source/
+voxelize/
+scoop/
+
+# Temp and logs
+*.log
+ntuser.dat*
+NTUSER.DAT*
+*.tmp
+.bash_history
+.lesshst
+.viminfo
+.emulator_console_auth_token
+.gitconfig
+
+# Executables and installers
+*.exe
+*.ps1
+
+# Package files
+package-lock.json
+package.json
+
+# Windows shortcuts
+*.lnk
+
+# VirtualBox
+.VirtualBox/
+
+# Apple
+Apple/
+
+# Saved Games
+Saved Games/
+
+# Other
+Kumir/
+IntelGraphicsProfiles/
+Doctor Web/
+

@@ -49,9 +49,9 @@
   }
 </script>
 
-<a href="/product/{part.id}" class="card-hover group block {compact ? 'p-4' : 'p-6'}">
+<a href="/product/{part.id}" class="card-hover group block {compact ? 'p-4' : 'p-6'} border-2 border-transparent hover:border-primary-200">
   <!-- Изображение товара -->
-  <div class="aspect-square bg-gradient-to-br from-secondary-50 to-secondary-100 rounded-xl mb-6 flex items-center justify-center overflow-hidden relative">
+  <div class="aspect-square bg-gradient-to-br from-primary-50/30 to-secondary-50 rounded-xl mb-6 flex items-center justify-center overflow-hidden relative">
     {#if hasImage && !imageError}
       <img 
         src={imageUrl} 
@@ -88,11 +88,11 @@
       </h3>
       
       <div class="flex items-center justify-between mt-2">
-        <span class="text-sm font-medium text-primary-600 bg-primary-50 px-2 py-1 rounded-lg">
+        <span class="text-sm font-semibold text-primary-700 bg-gradient-to-r from-primary-50 to-primary-100 px-3 py-1.5 rounded-lg border border-primary-200">
           {brandName}
         </span>
         {#if showWarehouse && warehouseName}
-          <span class="text-xs text-secondary-500 bg-secondary-100 px-2 py-1 rounded-lg">
+          <span class="text-xs text-secondary-600 bg-secondary-100 px-2 py-1 rounded-lg border border-secondary-200">
             {warehouseName}
           </span>
         {/if}
@@ -117,13 +117,13 @@
     
     <!-- Цена и кнопка -->
     <div class="space-y-4">
-      <div class="text-center">
-        <div class="text-2xl font-bold text-gradient mb-1">
+      <div class="text-center bg-gradient-to-br from-primary-50/50 to-transparent rounded-xl p-3 border border-primary-100">
+        <div class="text-2xl font-bold bg-gradient-to-r from-primary-700 to-brand-700 bg-clip-text text-transparent mb-1">
           {part.price_opt ? formatUtils.formatPrice(Number(part.price_opt)) : 'Цена по запросу'}
         </div>
         {#if part.available > 0}
-          <div class="text-sm text-secondary-500">
-            Остаток: <span class="font-medium text-secondary-700">{part.available} шт.</span>
+          <div class="text-sm text-secondary-600">
+            Остаток: <span class="font-semibold text-primary-700">{part.available} шт.</span>
           </div>
         {/if}
       </div>
@@ -131,10 +131,12 @@
       <button
         onclick={handleAddToCart}
         disabled={!isInStock}
-        class="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+        class="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
       >
         {#if isInStock}
-          <img src="/icons/shoping_cart.png" alt="В корзину" class="w-4 h-4 mr-2 object-contain icon-white" />
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
           В корзину
         {:else}
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

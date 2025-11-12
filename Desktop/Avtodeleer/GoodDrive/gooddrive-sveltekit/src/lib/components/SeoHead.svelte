@@ -67,23 +67,29 @@
   {/each}
   
   <!-- Дополнительные метатеги для SEO -->
-  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="author" content="GoodDrive" />
   <meta name="publisher" content="GoodDrive" />
-  <meta name="copyright" content="© {new Date().getFullYear()} GoodDrive" />
+  <meta name="copyright" content="© {new Date().getFullYear()} GoodDrive. Все права защищены." />
   <meta name="language" content="Russian" />
+  
+  <!-- Geo-targeting для локального SEO -->
   <meta name="geo.region" content="RU-CHE" />
   <meta name="geo.placename" content="Челябинск" />
   <meta name="geo.position" content="55.187617;61.424401" />
   <meta name="ICBM" content="55.187617, 61.424401" />
   
   <!-- Yandex Specific -->
-  <meta name="yandex-verification" content="" />
-  <meta name="yandex" content="index, follow" />
+  <meta name="yandex-verification" content="REPLACE_WITH_YANDEX_CODE" />
+  <meta name="yandex" content="index, follow, noyaca" />
   
   <!-- Google Specific -->
-  <meta name="google-site-verification" content="" />
-  <meta name="googlebot" content="index, follow" />
+  <meta name="google-site-verification" content="REPLACE_WITH_GOOGLE_CODE" />
+  <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  
+  <!-- Mobile App Links (если будет мобильное приложение) -->
+  <meta name="apple-itunes-app" content="app-id=YOUR_APP_ID" />
+  <meta name="google-play-app" content="app-id=YOUR_APP_ID" />
   
   <!-- JSON-LD структурированные данные -->
   {#if jsonLd}
@@ -100,6 +106,22 @@
         "position": index + 1,
         "name": crumb.name,
         "item": crumb.url
+      }))
+    })}</script>`}
+  {/if}
+  
+  <!-- FAQ Schema (если есть FAQ на странице) -->
+  {#if product && product.faq && product.faq.length > 0}
+    {@html `<script type="application/ld+json">${JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": product.faq.map(item => ({
+        "@type": "Question",
+        "name": item.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": item.answer
+        }
       }))
     })}</script>`}
   {/if}

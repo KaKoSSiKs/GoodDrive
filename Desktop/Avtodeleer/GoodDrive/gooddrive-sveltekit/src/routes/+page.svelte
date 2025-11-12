@@ -96,41 +96,47 @@
 />
 
 <!-- Hero секция -->
-<section class="relative bg-gradient-to-br from-dark-500 via-gray-800 to-dark-500 text-white overflow-hidden min-h-screen">
+<section class="relative bg-gradient-to-br from-dark-800 via-dark-900 to-black text-white overflow-hidden" style="min-height: 70vh;">
   <!-- Декоративные элементы -->
   {#if !heroImageFailed}
     <img
       src="/images/img_car.jpg"
       alt="Быстрая доставка автозапчастей"
-      class="absolute inset-0 w-full h-full object-cover object-center opacity-80"
+      class="absolute inset-0 w-full h-full object-cover object-center opacity-30"
       onerror={() => heroImageFailed = true}
     />
   {/if}
-  <div class="absolute inset-0 bg-black/40"></div>
+  <div class="absolute inset-0 bg-gradient-to-br from-primary-900/60 via-brand-900/40 to-black/60"></div>
   <div class="absolute top-0 left-0 w-full h-full">
-    <div class="absolute top-20 left-10 w-72 h-72 bg-red-600/10 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-20 right-10 w-96 h-96 bg-primary-600/10 rounded-full blur-3xl"></div>
+    <div class="absolute top-20 left-10 w-72 h-72 bg-primary-500/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-brand-600/20 rounded-full blur-3xl"></div>
   </div>
   
-  <div class="relative container-custom section-padding">
+  <div class="relative container-custom py-20 lg:py-28">
     <div class="max-w-5xl mx-auto text-center">
       <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-        <span class="bg-gradient-to-r from-white via-white to-gray-300 bg-clip-text text-transparent">
+        <span class="bg-gradient-to-r from-primary-200 via-primary-100 to-white bg-clip-text text-transparent">
           Автозапчасти
         </span>
         <br>
-        <span class="text-white">для вашего автомобиля</span>
+        <span class="text-white drop-shadow-lg">для вашего автомобиля</span>
       </h1>
-      <p class="text-xl md:text-2xl mb-12 text-gray-300 max-w-3xl mx-auto leading-relaxed">
+      <p class="text-xl md:text-2xl mb-12 text-gray-200 max-w-3xl mx-auto leading-relaxed">
         Широкий выбор оригинальных и совместимых запчастей от ведущих производителей. 
         Быстрая доставка по всей России. Консультации специалистов.
       </p>
       <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
-        <a href="/catalog" class="btn-primary text-lg px-8 py-4 shadow-2xl">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <a href="/catalog" class="btn-primary text-lg px-10 py-4 shadow-2xl">
+          <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           Перейти в каталог
+        </a>
+        <a href="/#contacts" class="btn-outline text-lg px-10 py-4 shadow-xl border-white/30 text-white hover:bg-white/10">
+          <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+          </svg>
+          Связаться с нами
         </a>
       </div>
     </div>
@@ -142,42 +148,42 @@
   <div class="container-custom">
     <h2 class="text-4xl font-bold text-dark-500 mb-12 text-center">Категории запчастей</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      <a href="/catalog?search=датчик%20модуль%20электроника" class="card group hover:border-primary-500 transition-all duration-300">
+      <a href="/catalog?search=датчик%20модуль%20электроника" class="card group hover:border-primary-500 hover:shadow-xl transition-all duration-300">
         <div class="p-6 text-center">
-          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-500 group-hover:scale-110 transition-all">
-            <img src="/icons/electronics_ic.png" alt="Электроника" class="w-10 h-10 object-contain icon-maroon" />
+          <div class="w-20 h-20 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-600 group-hover:scale-110 transition-all shadow-md">
+            <img src="/icons/electronics_ic.png" alt="Электроника" class="w-12 h-12 object-contain icon-primary" />
           </div>
-          <h3 class="font-bold text-dark-500 mb-2">Электроника</h3>
+          <h3 class="font-bold text-dark-800 mb-2 text-lg">Электроника</h3>
           <p class="text-sm text-gray-600">Датчики, модули, провода</p>
         </div>
       </a>
       
-      <a href="/catalog?search=двигатель%20фильтр%20масло%20ремень" class="card group hover:border-primary-500 transition-all duration-300">
+      <a href="/catalog?search=двигатель%20фильтр%20масло%20ремень" class="card group hover:border-primary-500 hover:shadow-xl transition-all duration-300">
         <div class="p-6 text-center">
-          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-500 group-hover:scale-110 transition-all">
-            <img src="/icons/engine_ic.png" alt="Двигатель" class="w-10 h-10 object-contain icon-maroon" />
+          <div class="w-20 h-20 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-600 group-hover:scale-110 transition-all shadow-md">
+            <img src="/icons/engine_ic.png" alt="Двигатель" class="w-12 h-12 object-contain icon-primary" />
           </div>
-          <h3 class="font-bold text-dark-500 mb-2">Двигатель</h3>
+          <h3 class="font-bold text-dark-800 mb-2 text-lg">Двигатель</h3>
           <p class="text-sm text-gray-600">Фильтры, масла, ремни</p>
         </div>
       </a>
       
-      <a href="/catalog?search=подвеска%20стойка%20амортизатор" class="card group hover:border-primary-500 transition-all duration-300">
+      <a href="/catalog?search=подвеска%20стойка%20амортизатор" class="card group hover:border-primary-500 hover:shadow-xl transition-all duration-300">
         <div class="p-6 text-center">
-          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-500 group-hover:scale-110 transition-all">
-            <img src="/icons/suspension_ic.png" alt="Подвеска" class="w-10 h-10 object-contain icon-maroon" />
+          <div class="w-20 h-20 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-600 group-hover:scale-110 transition-all shadow-md">
+            <img src="/icons/suspension_ic.png" alt="Подвеска" class="w-12 h-12 object-contain icon-primary" />
           </div>
-          <h3 class="font-bold text-dark-500 mb-2">Подвеска</h3>
+          <h3 class="font-bold text-dark-800 mb-2 text-lg">Подвеска</h3>
           <p class="text-sm text-gray-600">Стойки, амортизаторы, пружины</p>
         </div>
       </a>
       
-      <a href="/catalog?search=тормоз%20колодки%20диск" class="card group hover:border-primary-500 transition-all duration-300">
+      <a href="/catalog?search=тормоз%20колодки%20диск" class="card group hover:border-primary-500 hover:shadow-xl transition-all duration-300">
         <div class="p-6 text-center">
-          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-500 group-hover:scale-110 transition-all">
-            <img src="/icons/brake_ic.png" alt="Тормоза" class="w-10 h-10 object-contain icon-maroon" />
+          <div class="w-20 h-20 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4 overflow-hidden group-hover:bg-primary-600 group-hover:scale-110 transition-all shadow-md">
+            <img src="/icons/brake_ic.png" alt="Тормоза" class="w-12 h-12 object-contain icon-primary" />
           </div>
-          <h3 class="font-bold text-dark-500 mb-2">Тормоза</h3>
+          <h3 class="font-bold text-dark-800 mb-2 text-lg">Тормоза</h3>
           <p class="text-sm text-gray-600">Колодки, диски, суппорты</p>
         </div>
       </a>
@@ -222,7 +228,7 @@
 </section>
 
 <!-- Онлайн-помощь специалиста -->
-<section class="section-padding bg-gradient-to-br from-dark-500 to-gray-800 text-white">
+<section class="section-padding bg-gradient-to-br from-brand-800 via-primary-800 to-brand-900 text-white">
   <div class="container-custom">
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-12">
@@ -279,7 +285,7 @@
           </div>
         </div>
 
-        <button type="submit" class="w-full btn-primary bg-red-600 hover:bg-red-700">
+        <button type="submit" class="w-full btn-primary">
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
           </svg>
@@ -471,37 +477,37 @@
 
       <!-- Статистика -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="card p-8 text-center group hover:border-primary-500 transition-all">
-          <div class="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-500 group-hover:scale-110 transition-all">
-            <svg class="w-10 h-10 text-primary-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="card p-8 text-center group hover:border-primary-500 hover:shadow-2xl transition-all">
+          <div class="w-20 h-20 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-600 group-hover:scale-110 transition-all shadow-md">
+            <svg class="w-10 h-10 text-primary-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h3 class="font-bold text-dark-500 mb-3 text-2xl">Доступные цены</h3>
+          <h3 class="font-bold text-dark-800 mb-3 text-2xl">Доступные цены</h3>
           <p class="text-gray-600">
             Конкурентные цены на весь ассортимент. Работаем напрямую с поставщиками
           </p>
         </div>
 
-        <div class="card p-8 text-center group hover:border-primary-500 transition-all">
-          <div class="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-500 group-hover:scale-110 transition-all">
-            <svg class="w-10 h-10 text-primary-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="card p-8 text-center group hover:border-primary-500 hover:shadow-2xl transition-all">
+          <div class="w-20 h-20 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-600 group-hover:scale-110 transition-all shadow-md">
+            <svg class="w-10 h-10 text-primary-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
-          <h3 class="font-bold text-dark-500 mb-3 text-2xl">Быстрая доставка</h3>
+          <h3 class="font-bold text-dark-800 mb-3 text-2xl">Быстрая доставка</h3>
           <p class="text-gray-600">
             Доставляем заказы в кратчайшие сроки по всей России
           </p>
         </div>
 
-        <div class="card p-8 text-center group hover:border-primary-500 transition-all">
-          <div class="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-500 group-hover:scale-110 transition-all">
-            <svg class="w-10 h-10 text-primary-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="card p-8 text-center group hover:border-primary-500 hover:shadow-2xl transition-all">
+          <div class="w-20 h-20 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-600 group-hover:scale-110 transition-all shadow-md">
+            <svg class="w-10 h-10 text-primary-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
           </div>
-          <h3 class="font-bold text-dark-500 mb-3 text-2xl">Гарантия качества</h3>
+          <h3 class="font-bold text-dark-800 mb-3 text-2xl">Гарантия качества</h3>
           <p class="text-gray-600">
             Все товары сертифицированы и проходят проверку качества
           </p>

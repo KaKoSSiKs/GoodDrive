@@ -8,12 +8,33 @@ const config = {
 	kit: {
 		adapter: adapter({
 			out: 'build',
-			precompress: false,
+			// Включаем Brotli и Gzip compression для production
+			precompress: true,
 			envPrefix: ''
 		}),
 		alias: {
 			$lib: './src/lib'
+		},
+		// Prerendering для статических страниц (улучшает SEO)
+		prerender: {
+			entries: ['/', '/catalog', '/cart', '/faq', '/about'],
+			handleHttpError: ({ path, referrer, message }) => {
+				// Игнорируем ошибки 404 при prerender
+				if (message.includes('404')) {
+					return;
+				}
+				throw new Error(message);
+			}
+		},
+		// Optimization
+		version: {
+			name: Date.now().toString()
 		}
+	},
+	
+	// Compiler options для production
+	compilerOptions: {
+		cssHash: ({ hash, css }) => `svelte-${hash(css)}`
 	}
 };
 

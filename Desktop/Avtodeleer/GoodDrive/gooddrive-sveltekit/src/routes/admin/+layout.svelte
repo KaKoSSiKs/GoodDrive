@@ -64,11 +64,11 @@
         <div class="flex items-center justify-between min-h-[64px] py-2 gap-2 flex-wrap">
           <!-- Логотип -->
           <div class="flex items-center">
-            <a href="/admin/dashboard" class="flex items-center space-x-2">
-              <div class="w-7 h-7 sm:w-8 sm:h-8 bg-primary-500 rounded-lg flex items-center justify-center flex-shrink-0">
+            <a href="/admin/dashboard" class="flex items-center space-x-2 group">
+              <div class="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-primary-600 to-brand-700 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all">
                 <span class="text-white font-bold text-sm sm:text-base">A</span>
               </div>
-              <span class="text-base sm:text-xl font-bold text-gray-900 whitespace-nowrap">Admin</span>
+              <span class="text-base sm:text-xl font-bold bg-gradient-to-r from-primary-700 to-brand-700 bg-clip-text text-transparent whitespace-nowrap">Admin</span>
             </a>
           </div>
           

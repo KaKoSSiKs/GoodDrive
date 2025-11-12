@@ -192,6 +192,71 @@ npm run preview            # Preview production
 npm run db:seed            # Заполнить тестовыми данными
 ```
 
+---
+
+## 📚 Документация и руководства
+
+### 🎯 Новое! Comprehensive Documentation
+
+В папке `/documentation` доступны детальные руководства:
+
+**Обязательно к прочтению:**
+- **[AUDIT_SUMMARY.md](./documentation/AUDIT_SUMMARY.md)** - 📊 Итоговый отчет аудита
+- **[IMPLEMENTATION_PLAN.md](./documentation/IMPLEMENTATION_PLAN.md)** - 🚀 План внедрения улучшений
+
+**Специализированные guides:**
+- **[SEO_AUDIT.md](./documentation/SEO_AUDIT.md)** - 🔍 Полный SEO аудит (7,200+ слов)
+- **[PERFORMANCE_GUIDE.md](./documentation/PERFORMANCE_GUIDE.md)** - ⚡ Performance optimization (5,800+ слов)
+- **[PWA_ASSETS_GUIDE.md](./documentation/PWA_ASSETS_GUIDE.md)** - 📱 Создание PWA assets (4,500+ слов)
+- **[ACCESSIBILITY_GUIDE.md](./documentation/ACCESSIBILITY_GUIDE.md)** - ♿ A11y improvements (5,200+ слов)
+
+**Классическая документация:**
+- [QUICK_START.md](./documentation/QUICK_START.md) - Быстрый старт
+- [CHANGES.md](./documentation/CHANGES.md) - Журнал изменений
+- [RECOMMENDATIONS.md](./documentation/RECOMMENDATIONS.md) - Рекомендации
+
+**Всего:** 26,800+ слов комплексной документации по SEO, Performance, PWA, и Accessibility!
+
+### 🎯 Начните здесь:
+
+1. Прочитайте [AUDIT_SUMMARY.md](./documentation/AUDIT_SUMMARY.md) для понимания текущего состояния
+2. Следуйте [IMPLEMENTATION_PLAN.md](./documentation/IMPLEMENTATION_PLAN.md) для поэтапного улучшения проекта
+
+---
+
+## ✅ Последние улучшения (12 ноября 2025)
+
+### Security ✅
+- Добавлены критичные security headers (CSP, HSTS, X-Frame-Options, etc)
+- Настроена CORS policy
+- Защита от XSS, clickjacking, MIME sniffing
+
+### Performance ✅
+- Включена Brotli/Gzip compression (`precompress: true`)
+- Оптимизирована загрузка шрифтов (font-display: swap)
+- Добавлен preconnect для внешних ресурсов
+- Настроен prerendering для SEO
+
+### SEO ✅
+- Улучшены meta tags и Open Graph
+- Добавлена поддержка FAQ Schema
+- Placeholders для verification кодов
+- Расширенные robots directives
+
+### Documentation ✅
+- Создано 6 comprehensive guides (26,800+ слов)
+- Детальный 6-недельный implementation plan
+- 100+ code examples
+- Testing strategies и best practices
+
+### Что дальше? 🚀
+
+См. [IMPLEMENTATION_PLAN.md](./documentation/IMPLEMENTATION_PLAN.md) для следующих шагов:
+1. **PWA Assets** (2-3 часа) - Создать иконки и favicons
+2. **Image Optimization** (4-6 часов) - Sharp integration
+3. **Environment Variables** (30 мин) - Убрать hardcoded URLs
+4. **Analytics Setup** (1 час) - Настроить Yandex.Metrika & GA4
+
 ## 🛠️ Разработка
 
 ### Добавление новой модели
